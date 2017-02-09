@@ -96,6 +96,7 @@
     <Compile Include="Table.cs">
       <DependentUpon>CKWModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="WindowsAPI.cs" />
     <Page Include="KeyCapturedDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -162,11 +163,11 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="CKWDatabase.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CKWDatabase_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>CKWDatabase.mdf</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CKWModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -178,6 +179,8 @@
       <DependentUpon>CKWModel.edmx</DependentUpon>
       <LastGenOutput>CKWModel.cs</LastGenOutput>
     </Content>
+    <Resource Include="Logs\Log.txt" />
+    <Resource Include="Configs\Configuration.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

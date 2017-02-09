@@ -47,6 +47,7 @@ namespace CoinAutoKeyweight.NET
                     config.AssignedKey = assignedKey;
                     config.IsSnapping = isSnapping;
                     Entities.Tables.Attach(config);
+                    Entities.Entry(config).State = System.Data.Entity.EntityState.Modified;
                     Entities.SaveChanges();
                     return true;
                 }

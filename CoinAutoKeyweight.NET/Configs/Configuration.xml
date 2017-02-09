@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Config>
+  <AssignedKey>A</AssignedKey>
+  <AssignedKeyCode>30</AssignedKeyCode>
+  <AssignedActiveWindow>MapleStory</AssignedActiveWindow>
+  <AssignedActiveWindowHandle>MapleStory</AssignedActiveWindowHandle>
+  <IsSnapping>True</IsSnapping>
+</Config>

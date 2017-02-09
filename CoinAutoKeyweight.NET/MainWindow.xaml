@@ -26,9 +26,9 @@
         <Button x:Name="btnAssignActiveWindow"  Grid.Row="3" Grid.Column="0"  Content="Assign Active Window" Grid.ColumnSpan="2" Margin="5" Height="30"/>
         <TextBlock x:Name="txtAssignedKeyText" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap" Text="Assigned Key:" Margin="5"/>
         <TextBlock x:Name="txtAssignedKey" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=Config.AssignedKey}" Margin="0,5"/>
-        <TextBlock x:Name="txtMessageText" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=MessageText}" Margin="5" />
-        <Button x:Name="btnStart" Content="Start" Grid.Row="4" Grid.Column="0" Margin="5" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}"/>
+        <TextBlock x:Name="txtMessageText" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=MessageText}" Margin="5" Foreground="Green" HorizontalAlignment="Center" />
+        <Button x:Name="btnStart" Content="Start" Grid.Row="4" Grid.Column="0" Margin="5" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}" Click="btnStart_Click"/>
         <Button x:Name="btnStop" Content="Stop" Grid.Row="4" Grid.Column="1" Margin="5" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}"/>
-        <CheckBox x:Name="chkSnipping" Content="Snipping" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="5"/>
+        <CheckBox x:Name="chkSnipping" Content="Snipping" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" IsChecked="{Binding Source={StaticResource formDataSource}, Path=Config.IsSnapping, Mode=TwoWay}" Checked="chkSnipping_Checked" Unchecked="chkSnipping_Checked"/>
     </Grid>
 </Window>
