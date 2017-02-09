@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoinAutoKeyweight.NET.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace CoinAutoKeyweight.NET
         }
         public FormDataSource()
         {
-            Config = new ConfigurationData(DatabaseServices.Instance.LoadConfiguration());
+            Config = new ConfigurationData(XmlServices.Load());
         }
         public string MessageText
         {

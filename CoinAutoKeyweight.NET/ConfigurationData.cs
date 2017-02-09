@@ -10,9 +10,11 @@ namespace CoinAutoKeyweight.NET
     {
         private string _assignedKey = "Del";
         private string _assignedWindow = string.Empty;
-        private bool? _isSnapping = true;
+        private bool _isSnapping = true;
         private bool _needInitialConfig = false;
 
+        public string AssignedWindowHandle { get; set; }
+        public string AssignedKeyCode { get; set; }
         public bool NeedInitialConfig
         {
             get
@@ -45,7 +47,7 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
-        public bool? IsSnapping
+        public bool IsSnapping
         {
             get { return _isSnapping; }
             set
@@ -55,15 +57,28 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
-        public ConfigurationData(Table loadedConfig)
+        public ConfigurationData(Dictionary<string, object> loadedConfig)
         {
             if(loadedConfig != null)
             {
-                _assignedKey = loadedConfig.AssignedKey;
-                _assignedWindow = loadedConfig.AssignedActiveWindow;
-                _isSnapping = loadedConfig.IsSnapping;
+                _assignedKey = (string)loadedConfig["AssignedKey"];
+                _assignedWindow = (string)loadedConfig["AssignedActiveWindow"];
+                AssignedWindowHandle = (string)loadedConfig["AssignedActiveWindowHandle"];
+                AssignedKeyCode = (string)loadedConfig["AssignedKeyCode"];
+                _isSnapping = bool.Parse(loadedConfig["IsSnapping"].ToString());
                 NeedInitialConfig = true;
             }
+        }
+
+        public Dictionary<string, object> GetDataDic()
+        {
+            Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
+            extractedValueDic.Add("AssignedKey", _assignedKey);
+            extractedValueDic.Add("AssignedKeyCode", AssignedKeyCode);
+            extractedValueDic.Add("AssignedActiveWindow", _assignedWindow);
+            extractedValueDic.Add("AssignedActiveWindowHandle", AssignedWindowHandle);
+            extractedValueDic.Add("IsSnapping", _isSnapping);
+            return extractedValueDic;
         }
 
     }
