@@ -13,7 +13,7 @@ namespace CoinAutoKeyweight.NET
         private string _assignedWindow = string.Empty;
         private bool _isSnapping = true;
         private bool _needInitialConfig = false;
-
+        private int _holdTime = 5;
         public string AssignedWindowHandle { get; set; }
         public string AssignedKeyCode { get; set; }
         public bool NeedInitialConfig
@@ -58,6 +58,16 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
+        public int HoldTime
+        {
+            get { return _holdTime; }
+            set
+            {
+                _holdTime = value;
+                OnPropertyChanged("HoldTime");
+            }
+        }
+
         public ConfigurationData(Dictionary<string, object> loadedConfig)
         {
             if(loadedConfig != null)
@@ -67,6 +77,7 @@ namespace CoinAutoKeyweight.NET
                 AssignedWindowHandle = (string)loadedConfig["AssignedActiveWindowHandle"];
                 AssignedKeyCode = (string)loadedConfig["AssignedKeyCode"];
                 _isSnapping = bool.Parse(loadedConfig["IsSnapping"].ToString());
+                _holdTime = int.Parse(loadedConfig["HoldTime"].ToString());
                 NeedInitialConfig = true;
             }
         }
@@ -79,6 +90,7 @@ namespace CoinAutoKeyweight.NET
             extractedValueDic.Add("AssignedActiveWindow", _assignedWindow);
             extractedValueDic.Add("AssignedActiveWindowHandle", AssignedWindowHandle);
             extractedValueDic.Add("IsSnapping", _isSnapping);
+            extractedValueDic.Add("HoldTime", _holdTime);
             return extractedValueDic;
         }
 

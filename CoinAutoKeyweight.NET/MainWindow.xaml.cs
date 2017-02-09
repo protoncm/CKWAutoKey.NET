@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,6 +25,7 @@ namespace CoinAutoKeyweight.NET
     {
         private FormDataSource _formDataSource;
         private InputServices _inputService;
+        private Thread thread;
         public MainWindow()
         {
             InitializeComponent();
@@ -63,18 +65,51 @@ namespace CoinAutoKeyweight.NET
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            //Process[] processes = Process.GetProcessesByName("MapleStory");
-            //if (processes.Length == 0)
-            //{
-            //    MessageBox.Show("Please open MapleStory.", "Error", MessageBoxButton.OK);
-            //    return;
-            //}
+            if (!_formDataSource.IsRunning)
+            {
+                Process[] processes = Process.GetProcessesByName("MapleStory");
+                if (processes.Length == 0)
+                {
+                    MessageBox.Show("Please open MapleStory.", "Error", MessageBoxButton.OK);
+                    return;
+                }
+                _formDataSource.IsRunning = true;
+                IntPtr WindowHandle = processes[0].MainWindowHandle;
+                WindowsAPI.SwitchWindow(WindowHandle);
+                _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.AssignedKey, _formDataSource.Config.HoldTime);
+                thread = new Thread(new ThreadStart(() =>
+                {
+                    do
+                    {
+                        InputServices.PressKey(char.Parse(_formDataSource.Config.AssignedKey), true);
+                        Thread.Sleep(_formDataSource.Config.HoldTime * 1000);
+                        InputServices.PressKey(char.Parse(_formDataSource.Config.AssignedKey), false);
+                    }
+                    while (_formDataSource.IsRunning);
+                }));
 
-            //IntPtr WindowHandle = processes[0].MainWindowHandle;
-            //WindowsAPI.SwitchWindow(WindowHandle);
-            //System.Threading.Thread.Sleep(500);
-            //InputServices.PressKey('A', true);
-            //InputServices.PressKey('A', false);
+                thread.Start();
+            }
+            else
+            {
+                _formDataSource.IsRunning = false;
+                _formDataSource.MessageText = "Stopped / Waiting for next request.";
+                thread.Abort();
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if(thread != null)
+            {
+                _formDataSource.IsRunning = false;
+                thread.Abort();
+            }
+        }
+
+        private void tbHoldTime_KeyUp(object sender, KeyEventArgs e)
+        {
+            ApplyChanged();
         }
     }
 }

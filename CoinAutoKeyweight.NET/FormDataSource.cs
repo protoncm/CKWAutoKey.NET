@@ -11,7 +11,8 @@ namespace CoinAutoKeyweight.NET
 {
     public class FormDataSource : PropertyChanges
     {
-        private string _messageText = string.Empty;
+        private string _messageText = "Ready.";
+        private bool _isRunning = false;
         public ConfigurationData Config
         {
             get;
@@ -22,12 +23,24 @@ namespace CoinAutoKeyweight.NET
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 Config = new ConfigurationData(null);
+                _messageText = "{{Message}}";
             }
             else
             {
                 Config = new ConfigurationData(XmlServices.Load());
             }
         }
+
+        public bool IsRunning
+        {
+            get { return _isRunning; }
+            set
+            {
+                _isRunning = value;
+                OnPropertyChanged("IsRunning");
+            }
+        }
+
         public string MessageText
         {
             get { return _messageText; }

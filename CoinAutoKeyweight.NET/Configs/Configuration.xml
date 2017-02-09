@@ -5,4 +5,5 @@
   <AssignedActiveWindow>MapleStory</AssignedActiveWindow>
   <AssignedActiveWindowHandle>MapleStory</AssignedActiveWindowHandle>
   <IsSnapping>True</IsSnapping>
+  <HoldTime>5</HoldTime>
 </Config>

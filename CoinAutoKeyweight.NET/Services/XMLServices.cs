@@ -21,6 +21,7 @@ namespace CoinAutoKeyweight.NET.Services
                 extractedValueDic.Add("AssignedActiveWindow", document.Element("Config").Element("AssignedActiveWindow").Value);
                 extractedValueDic.Add("AssignedActiveWindowHandle", document.Element("Config").Element("AssignedActiveWindowHandle").Value);
                 extractedValueDic.Add("IsSnapping", document.Element("Config").Element("IsSnapping").Value);
+                extractedValueDic.Add("HoldTime", document.Element("Config").Element("HoldTime").Value);
                 return extractedValueDic;
             }
             catch (Exception ex)
@@ -38,6 +39,7 @@ namespace CoinAutoKeyweight.NET.Services
                 document.Element("Config").Element("AssignedActiveWindow").SetValue(configs["AssignedActiveWindow"]);
                 document.Element("Config").Element("AssignedActiveWindowHandle").SetValue(configs["AssignedActiveWindowHandle"]);
                 document.Element("Config").Element("IsSnapping").SetValue(configs["IsSnapping"]);
+                document.Element("Config").Element("HoldTime").SetValue(configs["HoldTime"]);
                 document.Save(XMLPath);
             }
             catch(Exception ex)
