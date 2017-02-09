@@ -25,7 +25,7 @@ namespace CoinAutoKeyweight.NET.Services
             }
             catch (Exception ex)
             {
-                return null;
+                throw new Exception(ex.Message);
             }
         }
         public static void Save(Dictionary<string, object> configs)
@@ -42,7 +42,7 @@ namespace CoinAutoKeyweight.NET.Services
             }
             catch(Exception ex)
             {
-
+                throw new Exception(ex.Message);
             }
         }
     }

@@ -80,7 +80,8 @@
       <DependentUpon>KeyCapturedDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="PropertyChanges.cs" />
-    <Compile Include="Services\XMLServices.cs" />
+    <Compile Include="Services\LogServices.cs" />
+    <Compile Include="Services\XmlServices.cs" />
     <Compile Include="WindowsAPI.cs" />
     <Page Include="KeyCapturedDialog.xaml">
       <SubType>Designer</SubType>

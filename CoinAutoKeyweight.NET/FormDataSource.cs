@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace CoinAutoKeyweight.NET
 {
@@ -18,7 +19,14 @@ namespace CoinAutoKeyweight.NET
         }
         public FormDataSource()
         {
-            Config = new ConfigurationData(XmlServices.Load());
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                Config = new ConfigurationData(null);
+            }
+            else
+            {
+                Config = new ConfigurationData(XmlServices.Load());
+            }
         }
         public string MessageText
         {

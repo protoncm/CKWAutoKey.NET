@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Coin - Auto Keyweight" Height="250" Width="250" ResizeMode="NoResize">
     <Window.Resources>
-        <local:FormDataSource x:Key="formDataSource"/>
+        <local:FormDataSource x:Key="formDataSource" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
