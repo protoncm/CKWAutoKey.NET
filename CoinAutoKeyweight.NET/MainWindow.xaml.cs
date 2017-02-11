@@ -25,6 +25,7 @@ namespace CoinAutoKeyweight.NET
     {
         private FormDataSource _formDataSource;
         private InputServices _inputService;
+        private IntPtr WindowHandle;
         private Thread thread;
         public MainWindow()
         {
@@ -74,16 +75,24 @@ namespace CoinAutoKeyweight.NET
                     return;
                 }
                 _formDataSource.IsRunning = true;
-                IntPtr WindowHandle = processes[0].MainWindowHandle;
+                WindowHandle = processes[0].MainWindowHandle;
                 WindowsAPI.SwitchWindow(WindowHandle);
                 _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.AssignedKey, _formDataSource.Config.HoldTime);
                 thread = new Thread(new ThreadStart(() =>
                 {
+                    int timeOffset = 10; //ms
                     do
                     {
-                        InputServices.PressKey(char.Parse(_formDataSource.Config.AssignedKey), true);
-                        Thread.Sleep(_formDataSource.Config.HoldTime * 1000);
-                        InputServices.PressKey(char.Parse(_formDataSource.Config.AssignedKey), false);
+                        Stopwatch timer = new Stopwatch();
+                        timer.Start();
+                        while (timer.Elapsed < TimeSpan.FromSeconds(_formDataSource.Config.HoldTime))
+                        {
+                            InputServices.PressKey(_formDataSource.Config.AssignedKey, true);
+                            Thread.Sleep(timeOffset); // waiting time
+                        }
+                        timer.Stop();
+                        // release key
+                        InputServices.ReleaseKey(_formDataSource.Config.AssignedKey);
                     }
                     while (_formDataSource.IsRunning);
                 }));
@@ -94,15 +103,17 @@ namespace CoinAutoKeyweight.NET
             {
                 _formDataSource.IsRunning = false;
                 _formDataSource.MessageText = "Stopped / Waiting for next request.";
+                WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
             }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(thread != null)
+            if(thread != null && WindowHandle != null)
             {
                 _formDataSource.IsRunning = false;
+                WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
             }
         }

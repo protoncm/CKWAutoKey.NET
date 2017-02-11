@@ -4,20 +4,33 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CoinAutoKeyweight.NET.Services
 {
     public class InputServices
     {
-        public static void PressKey(char ch, bool press)
+        public static void PressKey(string keyString, bool press)
         {
-            byte vk = WindowsAPI.VkKeyScan(ch);
-            ushort scanCode = (ushort)WindowsAPI.MapVirtualKey(vk, 0);
+            KeyConverter k = new KeyConverter();
+            Key key = (Key)k.ConvertFromString(keyString);
+
+            int virtualKey = KeyInterop.VirtualKeyFromKey(key);
+            ushort scanCode = (ushort)WindowsAPI.MapVirtualKey((uint)virtualKey, 0);
 
             if (press)
                 KeyDown(scanCode);
             else
                 KeyUp(scanCode);
+        }
+
+        public static void ReleaseKey(string keyString)
+        {
+            KeyConverter k = new KeyConverter();
+            Key key = (Key)k.ConvertFromString(keyString);
+            int virtualKey = KeyInterop.VirtualKeyFromKey(key);
+            ushort scanCode = (ushort)WindowsAPI.MapVirtualKey((uint)virtualKey, 0);
+            WindowsAPI.keybd_event((byte)virtualKey, (byte)scanCode, WindowsAPI.KEYEVENTF_KEYUP, 0);
         }
 
         public static void KeyDown(ushort scanCode)
