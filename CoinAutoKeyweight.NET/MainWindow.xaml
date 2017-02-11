@@ -28,7 +28,7 @@
         <TextBlock x:Name="txtAssignedKey" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=Config.AssignedKey}" Margin="0,5" VerticalAlignment="Center"  Foreground="Red"/>
         <TextBlock x:Name="txtMessageText" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=MessageText}" Margin="5" Foreground="Green" HorizontalAlignment="Center" />
         <Label x:Name="txtDelay" Grid.Row="1" Grid.Column="0" Content="Hold Time (sec)" Margin="5"/>
-        <TextBox x:Name="tbHoldTime" Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding Source={StaticResource formDataSource}, Path=Config.HoldTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" KeyUp="tbHoldTime_KeyUp" />
+        <TextBox x:Name="tbHoldTime" Grid.Column="1" Grid.Row="1" Margin="5" Text="{Binding Source={StaticResource formDataSource}, StringFormat=N, Path=Config.HoldTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" KeyUp="tbHoldTime_KeyUp" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="70" />
