@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         mc:Ignorable="d"
-        Title="KeyCapturedDialog" Height="100" Width="200" WindowStyle="None" KeyUp="Window_KeyUp">
+        Title="KeyCapturedDialog" Height="100" Width="200" WindowStyle="None" WindowStartupLocation="CenterOwner" KeyUp="Window_KeyUp">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
