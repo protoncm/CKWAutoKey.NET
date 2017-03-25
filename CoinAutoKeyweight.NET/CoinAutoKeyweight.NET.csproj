@@ -73,7 +73,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>kitty_2.ico</ApplicationIcon>
+    <ApplicationIcon>funshine_bear.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -166,6 +166,7 @@
   <ItemGroup />
   <ItemGroup>
     <Resource Include="kitty_2.ico" />
+    <Resource Include="funshine_bear.ico" />
     <Content Include="Logs\Log.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

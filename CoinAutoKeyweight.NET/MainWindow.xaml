@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         xmlns:converters="clr-namespace:CoinAutoKeyweight.NET.Converters"
         mc:Ignorable="d"
-        Title="Kitty Macro" Height="250" Width="250" ResizeMode="NoResize" Closing="Window_Closing" Icon="kitty_2.ico">
+        Title="Kitty Macro" Height="250" Width="250" ResizeMode="NoResize" Closing="Window_Closing" Icon="funshine_bear.ico">
     <Window.Resources>
         <local:FormDataSource x:Key="formDataSource" />
         <converters:ButtonStageConverter x:Key="buttonStageConverter"/>
