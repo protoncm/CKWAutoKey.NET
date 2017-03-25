@@ -82,7 +82,6 @@ namespace CoinAutoKeyweight.NET
                 _formDataSource.IsRunning = true;
                 WindowHandle = processes[0].MainWindowHandle;
                 WindowsAPI.SwitchWindow(WindowHandle);
-                _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration);
                 thread = new Thread(new ThreadStart(() =>
                 {
                     int timeOffset = 10; //ms
@@ -91,6 +90,7 @@ namespace CoinAutoKeyweight.NET
                         for (int i = 0; i < _formDataSource.Config.AssignedKeys.Count; i++)
                         {
                             _formDataSource.Config.DisplayAssignedKey = _formDataSource.Config.AssignedKeys[i];
+                            _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration);
                             Stopwatch timer = new Stopwatch();
                             timer.Start();
                             while (timer.Elapsed < TimeSpan.FromSeconds(_formDataSource.Config.DisplayAssignedKey.Duration))

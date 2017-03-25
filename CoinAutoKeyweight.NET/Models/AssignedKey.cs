@@ -9,7 +9,7 @@ namespace CoinAutoKeyweight.NET.Models
     public class AssignedKey : PropertyChanges
     {
         private string _key = string.Empty;
-        private int _duration = 10; // default is 10 sec.
+        private double _duration = 10; // default is 10 sec.
         private int _order = 0;
         private bool _isChecked = false;
         public string Key
@@ -21,7 +21,7 @@ namespace CoinAutoKeyweight.NET.Models
                 OnPropertyChanged("Key");
             }
         }
-        public int Duration
+        public double Duration
         {
             get { return _duration; }
             set

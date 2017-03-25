@@ -91,6 +91,7 @@ namespace CoinAutoKeyweight.NET
                     _formDataSource.Config.AssignedKeys.Remove(item);
                 }
             }
+            dgKeys.ItemsSource = null;
             dgKeys.ItemsSource = _formDataSource.Config.AssignedKeys;
         }
     }

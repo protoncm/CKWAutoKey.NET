@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         mc:Ignorable="d"
-        Title="KeysDialog" Height="300" Width="250" WindowStartupLocation="CenterOwner" WindowStyle="None">
+        Title="KeysDialog" Height="300" Width="250" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

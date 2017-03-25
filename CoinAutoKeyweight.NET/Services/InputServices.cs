@@ -14,9 +14,15 @@ namespace CoinAutoKeyweight.NET.Services
         {
             KeyConverter k = new KeyConverter();
             Key key = (Key)k.ConvertFromString(keyString);
-
             int virtualKey = KeyInterop.VirtualKeyFromKey(key);
             ushort scanCode = (ushort)WindowsAPI.MapVirtualKey((uint)virtualKey, 0);
+            switch(key)
+            {
+                case Key.Left:  scanCode = 203; break;
+                case Key.Right: scanCode = 205; break;
+                case Key.Up: scanCode = 200; break;
+                case Key.Down: scanCode = 208; break;
+            }
 
             if (press)
                 KeyDown(scanCode);

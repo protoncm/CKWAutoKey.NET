@@ -29,7 +29,7 @@ namespace CoinAutoKeyweight.NET.Services
                         {
                             AssignedKey ak = new AssignedKey()
                             {
-                                Duration = key.Attribute("Duration").ToInt(),
+                                Duration = key.Attribute("Duration").ToDouble(),
                                 Key = key.Value,
                                 Order = index++
                             };
@@ -42,7 +42,6 @@ namespace CoinAutoKeyweight.NET.Services
                 extractedValueDic.Add("AssignedActiveWindow", document.Element("Config").Element("AssignedActiveWindow").Value);
                 extractedValueDic.Add("AssignedActiveWindowHandle", document.Element("Config").Element("AssignedActiveWindowHandle").Value);
                 extractedValueDic.Add("IsSnapping", document.Element("Config").Element("IsSnapping").Value);
-                extractedValueDic.Add("HoldTime", document.Element("Config").Element("HoldTime").Value);
                 return extractedValueDic;
             }
             catch (Exception ex)
@@ -77,7 +76,6 @@ namespace CoinAutoKeyweight.NET.Services
                 document.Element("Config").Element("AssignedActiveWindow").SetValue(configs["AssignedActiveWindow"]);
                 document.Element("Config").Element("AssignedActiveWindowHandle").SetValue(configs["AssignedActiveWindowHandle"]);
                 document.Element("Config").Element("IsSnapping").SetValue(configs["IsSnapping"]);
-                document.Element("Config").Element("HoldTime").SetValue(configs["HoldTime"]);
                 document.Save(XMLPath);
             }
             catch(Exception ex)
@@ -89,12 +87,12 @@ namespace CoinAutoKeyweight.NET.Services
 
     public static class XmlHelper
     {
-        public static int ToInt(this XAttribute attr)
+        public static double ToDouble(this XAttribute attr)
         {
             if(attr != null && !string.IsNullOrEmpty(attr.Value))
             {
-                int result = 0;
-                if(int.TryParse(attr.Value, out result))
+                double result = 0;
+                if(double.TryParse(attr.Value, out result))
                 {
                     return result;
                 }
