@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoinAutoKeyweight.NET.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace CoinAutoKeyweight.NET
 {
     public class ConfigurationData : PropertyChanges
     {
-        private string _assignedKey = "Del";
+        private List<AssignedKey> _assignedKeys = null;
+        private AssignedKey _displayAssignedKey = null;
+        private string _currentKey = string.Empty;
         private string _assignedWindow = string.Empty;
         private bool _isSnapping = true;
         private bool _needInitialConfig = false;
@@ -28,13 +31,13 @@ namespace CoinAutoKeyweight.NET
                 OnPropertyChanged("NeedInitialConfig");
             }
         }
-        public string AssignedKey
+        public AssignedKey DisplayAssignedKey
         {
-            get { return _assignedKey; }
+            get { return _displayAssignedKey; }
             set
             {
-                _assignedKey = value;
-                OnPropertyChanged("AssignedKey");
+                _displayAssignedKey = value;
+                OnPropertyChanged("DisplayAssignedKey");
             }
         }
 
@@ -68,11 +71,42 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
+        public List<AssignedKey> AssignedKeys
+        {
+            get { return _assignedKeys; }
+            set
+            {
+                _assignedKeys = value;
+                OnPropertyChanged("AssignedKeys");
+            }
+        }
+
+        public string CurrentKey
+        {
+            get { return _currentKey; }
+            set
+            {
+                _currentKey = value;
+                OnPropertyChanged("CurrentKey");
+            }
+        }
+
         public ConfigurationData(Dictionary<string, object> loadedConfig)
         {
             if(loadedConfig != null)
             {
-                _assignedKey = (string)loadedConfig["AssignedKey"];
+                var keyList = ((List<AssignedKey>)loadedConfig["AssignedKey"]);
+                if (keyList != null && keyList.Count > 0)
+                {
+                    _assignedKeys = keyList;
+                    _displayAssignedKey = keyList[0];
+                }
+                else
+                {
+                    _assignedKeys = new List<AssignedKey>();
+                    _displayAssignedKey = AssignedKey.Default;
+                }
+                
                 _assignedWindow = (string)loadedConfig["AssignedActiveWindow"];
                 AssignedWindowHandle = (string)loadedConfig["AssignedActiveWindowHandle"];
                 AssignedKeyCode = (string)loadedConfig["AssignedKeyCode"];
@@ -82,10 +116,12 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
+        
+
         public Dictionary<string, object> GetDataDic()
         {
             Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
-            extractedValueDic.Add("AssignedKey", _assignedKey);
+            extractedValueDic.Add("AssignedKey", _assignedKeys);
             extractedValueDic.Add("AssignedKeyCode", AssignedKeyCode);
             extractedValueDic.Add("AssignedActiveWindow", _assignedWindow);
             extractedValueDic.Add("AssignedActiveWindowHandle", AssignedWindowHandle);

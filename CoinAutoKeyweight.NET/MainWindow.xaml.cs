@@ -1,4 +1,5 @@
-﻿using CoinAutoKeyweight.NET.Services;
+﻿using CoinAutoKeyweight.NET.Models;
+using CoinAutoKeyweight.NET.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,21 +38,25 @@ namespace CoinAutoKeyweight.NET
         private void btnAssignKey_Click(object sender, RoutedEventArgs e)
         {
             _formDataSource.MessageText = "Please press any key.";
-            KeyCapturedDialog keyCapturedDialog = new KeyCapturedDialog();
-            keyCapturedDialog.DataContext = _formDataSource;
-            keyCapturedDialog.Closed += (o, args) =>
+            KeysDialog keyDialog = new KeysDialog();
+            keyDialog.DataContext = _formDataSource;
+            keyDialog.Closed += (o, args) =>
             {
                 ApplyChanged();
                 _formDataSource.MessageText = "Saved Key.";
             };
-            keyCapturedDialog.ShowDialog();
+            keyDialog.ShowDialog();
         }
 
         private void chkSnipping_Checked(object sender, RoutedEventArgs e)
         {
             ApplyChanged();
-            if(_formDataSource != null)
+            if (_formDataSource != null)
             {
+                if (_formDataSource.Config.AssignedKeys.Count == 0)
+                {
+                    _formDataSource.Config.DisplayAssignedKey = AssignedKey.Default;
+                }
                 _formDataSource.MessageText = string.Format("Updated Snapping = {0}.", chkSnipping.IsChecked?.ToString());
             }
         }
@@ -68,31 +73,35 @@ namespace CoinAutoKeyweight.NET
         {
             if (!_formDataSource.IsRunning)
             {
-                Process[] processes = Process.GetProcessesByName("MapleStory");
+                Process[] processes = Process.GetProcessesByName(_formDataSource.Config.AssignedActiveWindow);
                 if (processes.Length == 0)
                 {
-                    MessageBox.Show("Please open MapleStory.", "Error", MessageBoxButton.OK);
+                    MessageBox.Show("Please open " + _formDataSource.Config.AssignedActiveWindow + ".", "Error", MessageBoxButton.OK);
                     return;
                 }
                 _formDataSource.IsRunning = true;
                 WindowHandle = processes[0].MainWindowHandle;
                 WindowsAPI.SwitchWindow(WindowHandle);
-                _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.AssignedKey, _formDataSource.Config.HoldTime);
+                _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration);
                 thread = new Thread(new ThreadStart(() =>
                 {
                     int timeOffset = 10; //ms
                     do
                     {
-                        Stopwatch timer = new Stopwatch();
-                        timer.Start();
-                        while (timer.Elapsed < TimeSpan.FromSeconds(_formDataSource.Config.HoldTime))
+                        for (int i = 0; i < _formDataSource.Config.AssignedKeys.Count; i++)
                         {
-                            InputServices.PressKey(_formDataSource.Config.AssignedKey, true);
-                            Thread.Sleep(timeOffset); // waiting time
+                            _formDataSource.Config.DisplayAssignedKey = _formDataSource.Config.AssignedKeys[i];
+                            Stopwatch timer = new Stopwatch();
+                            timer.Start();
+                            while (timer.Elapsed < TimeSpan.FromSeconds(_formDataSource.Config.DisplayAssignedKey.Duration))
+                            {
+                                InputServices.PressKey(_formDataSource.Config.DisplayAssignedKey.Key, true);
+                                Thread.Sleep(timeOffset); // waiting time
+                            }
+                            timer.Stop();
+                            // release key
+                            InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
                         }
-                        timer.Stop();
-                        // release key
-                        InputServices.ReleaseKey(_formDataSource.Config.AssignedKey);
                     }
                     while (_formDataSource.IsRunning);
                 }));
@@ -113,7 +122,6 @@ namespace CoinAutoKeyweight.NET
             if(thread != null && WindowHandle != null)
             {
                 _formDataSource.IsRunning = false;
-                WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
             }
         }

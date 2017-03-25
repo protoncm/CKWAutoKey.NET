@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock x:Name="txtMessage" Text="{Binding MessageText}" HorizontalAlignment="Center" />
-        <TextBlock x:Name="txtKey" Text="{Binding Config.AssignedKey, Mode=TwoWay}" Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center" FontSize="25"/>
+        <TextBlock x:Name="txtKey" Text="{Binding Config.CurrentKey, Mode=TwoWay}" Grid.Row="1" HorizontalAlignment="Center" TextAlignment="Center" FontSize="25"/>
         <Button x:Name="btnOk" Grid.Row="2" Content="OK" Width="50" Height="30" Click="btnOk_Click"/>
     </Grid>
 </Window>

@@ -103,6 +103,10 @@
     <Compile Include="Converters\SettingButtonStageConverter.cs" />
     <Compile Include="Converters\ButtonStageConverter.cs" />
     <Compile Include="FormDataSource.cs" />
+    <Compile Include="KeysDialog.xaml.cs">
+      <DependentUpon>KeysDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AssignedKey.cs" />
     <Compile Include="Services\InputServices.cs" />
     <Compile Include="KeyCapturedDialog.xaml.cs">
       <DependentUpon>KeyCapturedDialog.xaml</DependentUpon>
@@ -112,6 +116,10 @@
     <Compile Include="Services\XmlServices.cs" />
     <Compile Include="WindowsAPI.cs" />
     <Page Include="KeyCapturedDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="KeysDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

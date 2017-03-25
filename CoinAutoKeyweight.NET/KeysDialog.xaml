@@ -1,0 +1,30 @@
+﻿<Window x:Class="CoinAutoKeyweight.NET.KeysDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
+        mc:Ignorable="d"
+        Title="KeysDialog" Height="300" Width="250">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="dgKeys" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding Config.AssignedKeys}" AutoGenerateColumns="False" MouseDoubleClick="dgKeys_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn  Binding="{Binding IsChecked, Mode=TwoWay}" />
+                <DataGridTextColumn Header="Key" Width="50" Binding="{Binding Key, Mode=TwoWay}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Duration" Width="*" Binding="{Binding Duration, Mode=TwoWay}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="btnAddKey" Grid.Row="1" Margin="5" Click="btnAddKey_Click">Add</Button>
+        <Button x:Name="btnRemoveKey" Grid.Row="1" Grid.Column="1" Margin="5" Click="btnRemoveKey_Click">Remove</Button>
+        <Button x:Name="btnClearKey" Grid.Row="1" Grid.Column="2" Margin="5" Click="btnClearKey_Click">Clear</Button>
+    </Grid>
+</Window>

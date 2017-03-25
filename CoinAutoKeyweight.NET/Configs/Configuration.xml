@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Config>
-  <AssignedKey>A</AssignedKey>
+  <AssignedKey>
+    <key Duration="1000">A</key>
+    <key Duration="2000">B</key>
+    <key Duration="3000">C</key>
+  </AssignedKey>
   <AssignedKeyCode>30</AssignedKeyCode>
   <AssignedActiveWindow>MapleStory</AssignedActiveWindow>
   <AssignedActiveWindowHandle>MapleStory</AssignedActiveWindowHandle>
