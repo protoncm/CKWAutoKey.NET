@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         xmlns:converters="clr-namespace:CoinAutoKeyweight.NET.Converters"
         mc:Ignorable="d"
-        Title="Kitty Macro" Height="250" Width="250" ResizeMode="NoResize" Closing="Window_Closing" Icon="funshine_bear.ico">
+        Title="Bear Macro" Height="250" Width="250" ResizeMode="NoResize" Closing="Window_Closing" Icon="funshine_bear.ico">
     <Window.Resources>
         <local:FormDataSource x:Key="formDataSource" />
         <converters:ButtonStageConverter x:Key="buttonStageConverter"/>
@@ -36,8 +36,8 @@
                 <ColumnDefinition Width="70" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnAssignKey" Content="KEY"  Grid.Column="0" Margin="5" Click="btnAssignKey_Click" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}"/>
-            <Button x:Name="btnAssignActiveWindow"  Grid.Column="1"  Content="Window"  Margin="5" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}"/>
+            <Button x:Name="btnAssignKey" Content="Action Key"  Grid.Column="0" Margin="5" Click="btnAssignKey_Click" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}"/>
+            <Button x:Name="btnAssignBuffKey"  Grid.Column="1"  Content="Buff Key"  Margin="5" Height="30" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}"/>
             <CheckBox x:Name="chkSnipping" Content="Snipping" Grid.Column="2" Grid.ColumnSpan="2" Margin="5" IsChecked="{Binding Source={StaticResource formDataSource}, Path=Config.IsSnapping, Mode=TwoWay}" Checked="chkSnipping_Checked" Unchecked="chkSnipping_Checked" VerticalAlignment="Center"/>
         </Grid>
         <Button x:Name="btnStart" Grid.ColumnSpan="3" Content="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource buttonStageConverter}}" Grid.Row="4" Grid.Column="0" Margin="5,5,5.2,5" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}" Click="btnStart_Click" FontSize="20"/>

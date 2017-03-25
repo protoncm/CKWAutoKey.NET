@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         mc:Ignorable="d"
-        Title="KeysDialog" Height="300" Width="250" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Action Keys" Height="300" Width="250" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -16,7 +16,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dgKeys" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding Config.AssignedKeys}" AutoGenerateColumns="False" MouseDoubleClick="dgKeys_MouseDoubleClick">
+        <DataGrid x:Name="dgKeys" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding Config.AssignedKeys}" AutoGenerateColumns="False" MouseDoubleClick="dgKeys_MouseDoubleClick" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn  Binding="{Binding IsChecked, Mode=TwoWay}" />
                 <DataGridTextColumn Header="Key" Width="50" Binding="{Binding Key, Mode=TwoWay}" IsReadOnly="True" />
