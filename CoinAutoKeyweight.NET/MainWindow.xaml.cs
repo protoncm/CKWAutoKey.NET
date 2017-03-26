@@ -4,18 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CoinAutoKeyweight.NET
 {
@@ -28,6 +20,7 @@ namespace CoinAutoKeyweight.NET
         private InputServices _inputService;
         private IntPtr WindowHandle;
         private Thread thread;
+        private Stopwatch runningTime;
         public MainWindow()
         {
             InitializeComponent();
@@ -72,12 +65,16 @@ namespace CoinAutoKeyweight.NET
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             string processName = _formDataSource.Config.CurrentProfile.AssignedWindowName;
-            Stopwatch runningTime = new Stopwatch();
+            runningTime = new Stopwatch();
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Interval = 1000;
 #if DEBUG
             processName = "Notepad";
 #endif
             if (!_formDataSource.IsRunning)
             {
+                timer.Elapsed += Timer_Elapsed;
+
                 Process[] processes = Process.GetProcessesByName(processName);
                 if (processes.Length == 0)
                 {
@@ -90,12 +87,15 @@ namespace CoinAutoKeyweight.NET
                 thread = new Thread(new ThreadStart(() =>
                 {
                     bool firstTimeBuff = true;
+                    // capture running time
+                    runningTime.Start();
+                    timer.Start();
+
                     do
                     {
                         //check buff before start
                         var buff = _formDataSource.Config.CurrentProfile.Buff;
-                        runningTime.Start();
-                        if(_formDataSource.Config.AssignedBuffKeys.Count > 0 && buff.AutoBuff)
+                        if (_formDataSource.Config.AssignedBuffKeys.Count > 0 && buff.AutoBuff)
                         {
                             if ((buff.StartIn == 0 && firstTimeBuff) || (buff.StartIn <= runningTime.Elapsed.TotalSeconds && firstTimeBuff))
                             {
@@ -131,13 +131,22 @@ namespace CoinAutoKeyweight.NET
             else
             {
                 runningTime.Stop();
+                timer.Elapsed -= Timer_Elapsed;
+                timer.Stop();
+                timer.Enabled = false;
                 _formDataSource.IsRunning = false;
                 _formDataSource.SetStatusText("Stopped / Waiting for next request.");
+                _formDataSource.SetRunningTime();
                 WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
                 //make sure current key was released
                 InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
             }
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            _formDataSource.SetRunningTime(runningTime.Elapsed.TotalSeconds);
         }
 
         public void DoBuff(List<AssignedKey> keys, Stopwatch runningStopwatch)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinAutoKeyweight.NET.Models
+﻿namespace CoinAutoKeyweight.NET.Models
 {
     public class AssignedKey : PropertyChanges
     {

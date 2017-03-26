@@ -1,12 +1,7 @@
-﻿using CoinAutoKeyweight.NET.Models;
-using CoinAutoKeyweight.NET.Services;
-using System;
-using System.Collections.Generic;
+﻿using CoinAutoKeyweight.NET.Services;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using System;
 
 namespace CoinAutoKeyweight.NET
 {
@@ -17,7 +12,7 @@ namespace CoinAutoKeyweight.NET
         private const string STATUS = "Status";
         private const string  APPLICATION_TITLE = "Bear Macro";
         private string _formTitle = string.Empty;
-        
+        private string _runningTime = "00:00:00";
         public ConfigurationData Config
         {
             get;
@@ -59,6 +54,19 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
+        public string RunningTime
+        {
+            get
+            {
+                return string.Format("Running Time: {0}", _runningTime);
+            }
+            set
+            {
+                _runningTime = value;
+                OnPropertyChanged("RunningTime");
+            }
+        }
+
         public string MessageText
         {
             get { return _messageText; }
@@ -72,6 +80,19 @@ namespace CoinAutoKeyweight.NET
         public void SetStatusText(string text)
         {
             MessageText = text;
+        }
+
+        public void SetRunningTime(double totalSeconds = 0)
+        {
+            if(totalSeconds != 0)
+            {
+                TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
+                RunningTime = time.ToString(@"hh\:mm\:ss");
+            }
+            else
+            {
+                RunningTime = "00:00:00";
+            }
         }
     }
 }
