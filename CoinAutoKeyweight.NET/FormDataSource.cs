@@ -13,6 +13,7 @@ namespace CoinAutoKeyweight.NET
         private const string  APPLICATION_TITLE = "Bear Macro";
         private string _formTitle = string.Empty;
         private string _runningTime = "00:00:00";
+        private string _logMessage = @"Coming soon!";
         public ConfigurationData Config
         {
             get;
@@ -74,6 +75,16 @@ namespace CoinAutoKeyweight.NET
             {
                 _messageText = string.Format("{0}: {1}", STATUS, value);
                 OnPropertyChanged("MessageText");
+            }
+        }
+
+        public string LogMessage
+        {
+            get { return _logMessage; }
+            set
+            {
+                _logMessage = value;
+                OnPropertyChanged("LogMessage");
             }
         }
 

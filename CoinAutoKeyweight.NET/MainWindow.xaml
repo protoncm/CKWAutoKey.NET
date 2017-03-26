@@ -56,7 +56,10 @@
             <materialDesign:PackIcon Kind="Clock"/>
             <TextBlock Text="{Binding Source={StaticResource formDataSource}, Path=RunningTime}" Margin="5,0" />
         </WrapPanel>
-        <TextBox x:Name="tbLog" Grid.Row="2" Grid.ColumnSpan="3" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Margin="5" />
+        <TextBox Grid.Row="2" Grid.ColumnSpan="3" Margin="5" 
+                 materialDesign:TextFieldAssist.DecorationVisibility="Hidden" 
+                 AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" 
+                 Text="{Binding Source={StaticResource formDataSource}, Path=LogMessage }" />
         <Button x:Name="btnStart" Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Margin="5" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}" Click="btnStart_Click" FontSize="20" Height="30" Content="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource buttonStageConverter}}">
         </Button>
         <StatusBar Grid.Row="4" Grid.ColumnSpan="3">
