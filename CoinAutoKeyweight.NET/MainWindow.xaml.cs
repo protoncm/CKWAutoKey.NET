@@ -105,6 +105,12 @@ namespace CoinAutoKeyweight.NET
                             timer.Stop();
                             // release key
                             InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
+                            // delay
+                            if(_formDataSource.Config.DisplayAssignedKey.Delay != 0)
+                            {
+                                int delay = Convert.ToInt32(_formDataSource.Config.DisplayAssignedKey.Delay * 1000);
+                                Thread.Sleep(delay);
+                            }
                         }
                     }
                     while (_formDataSource.IsRunning);

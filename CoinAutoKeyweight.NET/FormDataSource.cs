@@ -13,6 +13,7 @@ namespace CoinAutoKeyweight.NET
     {
         private string _messageText = "Ready.";
         private bool _isRunning = false;
+        private const string STATUS = "Status";
         private const string  APPLICATION_TITLE = "Bear Macro";
         private string _formTitle = string.Empty;
         
@@ -26,7 +27,7 @@ namespace CoinAutoKeyweight.NET
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 Config = new ConfigurationData(null);
-                _messageText = "{{Message}}";
+                _messageText = STATUS;
             }
             else
             {
@@ -58,7 +59,7 @@ namespace CoinAutoKeyweight.NET
             get { return _messageText; }
             set
             {
-                _messageText = value;
+                _messageText = string.Format("{0}: {1}", STATUS, value);
                 OnPropertyChanged("MessageText");
             }
         }

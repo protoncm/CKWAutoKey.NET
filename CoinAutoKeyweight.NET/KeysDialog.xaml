@@ -21,6 +21,7 @@
                 <DataGridCheckBoxColumn  Binding="{Binding IsChecked, Mode=TwoWay}" />
                 <DataGridTextColumn Header="Key" Width="50" Binding="{Binding Key, Mode=TwoWay}" IsReadOnly="True" />
                 <DataGridTextColumn Header="Duration" Width="*" Binding="{Binding Duration, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Delay" Width="*" Binding="{Binding Delay, Mode=TwoWay}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btnAddKey" Grid.Row="1" Margin="5" Click="btnAddKey_Click">Add</Button>

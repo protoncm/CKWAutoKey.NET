@@ -55,7 +55,7 @@
         <Button x:Name="btnStart" Grid.ColumnSpan="3" Grid.Row="2" Grid.Column="0" Margin="5" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}" Click="btnStart_Click" FontSize="20" Height="30" Content="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource buttonStageConverter}}">
         </Button>
         <StatusBar Grid.Row="3" Grid.ColumnSpan="3">
-            <TextBlock x:Name="txtMessageText" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=MessageText}" Foreground="Green" HorizontalAlignment="Center" />
+            <TextBlock x:Name="txtMessageText" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=MessageText}" Margin="5,0" HorizontalAlignment="Center" />
         </StatusBar>
     </Grid>
 </Window>
