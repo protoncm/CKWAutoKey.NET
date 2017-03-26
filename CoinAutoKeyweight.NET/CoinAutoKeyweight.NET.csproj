@@ -99,6 +99,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BuffDialog.xaml.cs">
+      <DependentUpon>BuffDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChangeNameDialog.xaml.cs">
       <DependentUpon>ChangeNameDialog.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,10 @@
     <Compile Include="Services\LogServices.cs" />
     <Compile Include="Services\XmlServices.cs" />
     <Compile Include="WindowsAPI.cs" />
+    <Page Include="BuffDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChangeNameDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

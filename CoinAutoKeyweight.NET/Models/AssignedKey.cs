@@ -13,6 +13,7 @@ namespace CoinAutoKeyweight.NET.Models
         private int _order = 0;
         private bool _isChecked = false;
         private double _delay = 0.1;
+        private double _timeStamp = 0;
         public double Delay
         {
             get { return _delay; }
@@ -57,6 +58,16 @@ namespace CoinAutoKeyweight.NET.Models
             {
                 _isChecked = value;
                 OnPropertyChanged("IsChecked");
+            }
+        }
+
+        public double Timestamp
+        {
+            get { return _timeStamp; }
+            set
+            {
+                _timeStamp = value;
+                OnPropertyChanged("Timestamp");
             }
         }
 

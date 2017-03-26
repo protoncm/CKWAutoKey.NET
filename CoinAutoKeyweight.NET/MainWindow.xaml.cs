@@ -37,7 +37,7 @@ namespace CoinAutoKeyweight.NET
 
         private void btnAssignKey_Click(object sender, RoutedEventArgs e)
         {
-            _formDataSource.MessageText = "Please press any key.";
+            _formDataSource.SetStatusText("Open Key Dialog.");
             KeysDialog keyDialog = new KeysDialog();
             keyDialog.DataContext = _formDataSource;
             keyDialog.Closed += (o, args) =>
@@ -72,6 +72,7 @@ namespace CoinAutoKeyweight.NET
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             string processName = _formDataSource.Config.CurrentProfile.AssignedWindowName;
+            Stopwatch runningTime = new Stopwatch();
 #if DEBUG
             processName = "Notepad";
 #endif
@@ -88,29 +89,38 @@ namespace CoinAutoKeyweight.NET
                 WindowsAPI.SwitchWindow(WindowHandle);
                 thread = new Thread(new ThreadStart(() =>
                 {
-                    int timeOffset = 10; //ms
+                    bool firstTimeBuff = true;
                     do
                     {
+                        //check buff before start
+                        var buff = _formDataSource.Config.CurrentProfile.Buff;
+                        runningTime.Start();
+                        if(_formDataSource.Config.AssignedBuffKeys.Count > 0 && buff.AutoBuff)
+                        {
+                            if ((buff.StartIn == 0 && firstTimeBuff) || (buff.StartIn <= runningTime.Elapsed.TotalSeconds && firstTimeBuff))
+                            {
+                                DoBuff(_formDataSource.Config.AssignedBuffKeys, runningTime);
+                                firstTimeBuff = false;
+                            }
+                            else if(!firstTimeBuff)
+                            {
+                                var currentTime = runningTime.Elapsed.TotalMinutes;
+                                var buffInThisTime = _formDataSource.Config.AssignedBuffKeys.Where(a => currentTime - a.Timestamp >= a.Duration).ToList();
+                                if (buffInThisTime != null && buffInThisTime.Count > 0)
+                                {
+                                    DoBuff(buffInThisTime, runningTime);
+                                }
+                            }
+                        }
+                       
+                        
                         for (int i = 0; i < _formDataSource.Config.AssignedKeys.Count; i++)
                         {
-                            _formDataSource.Config.DisplayAssignedKey = _formDataSource.Config.AssignedKeys[i];
+                            var activeKeyStroke = _formDataSource.Config.AssignedKeys[i];
+                            _formDataSource.Config.DisplayAssignedKey = activeKeyStroke;
                             _formDataSource.SetStatusText(string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration));
-                            Stopwatch timer = new Stopwatch();
-                            timer.Start();
-                            while (timer.Elapsed < TimeSpan.FromSeconds(_formDataSource.Config.DisplayAssignedKey.Duration))
-                            {
-                                InputServices.PressKey(_formDataSource.Config.DisplayAssignedKey.Key, true);
-                                Thread.Sleep(timeOffset); // waiting time
-                            }
-                            timer.Stop();
-                            // release key
-                            InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
-                            // delay
-                            if(_formDataSource.Config.DisplayAssignedKey.Delay != 0)
-                            {
-                                int delay = Convert.ToInt32(_formDataSource.Config.DisplayAssignedKey.Delay * 1000);
-                                Thread.Sleep(delay);
-                            }
+                            // do action
+                            DoAction(activeKeyStroke);
                         }
                     }
                     while (_formDataSource.IsRunning);
@@ -120,12 +130,51 @@ namespace CoinAutoKeyweight.NET
             }
             else
             {
+                runningTime.Stop();
                 _formDataSource.IsRunning = false;
                 _formDataSource.SetStatusText("Stopped / Waiting for next request.");
                 WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
                 //make sure current key was released
                 InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
+            }
+        }
+
+        public void DoBuff(List<AssignedKey> keys, Stopwatch runningStopwatch)
+        {
+            foreach (var buffKey in keys)
+            {
+                _formDataSource.Config.DisplayAssignedKey = buffKey;
+                _formDataSource.SetStatusText(string.Format("Buffing Key {0} for every {1} min.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration));
+                // do action
+                DoAction(buffKey, true);
+                buffKey.Timestamp = runningStopwatch.Elapsed.TotalMinutes;
+            }
+        }
+
+        private void DoAction(AssignedKey ak, bool isBuff = false)
+        {
+            int timeOffset = 10; //ms
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            double duration = isBuff ? 0.5 : ak.Duration;
+            while (timer.Elapsed < TimeSpan.FromSeconds(duration))
+            {
+                InputServices.PressKey(ak.Key, true);
+                Thread.Sleep(timeOffset); // waiting time
+            }
+            timer.Stop();
+            // release key
+            InputServices.ReleaseKey(ak.Key);
+            // delay
+            if (ak.Delay != 0)
+            {
+                int delay = Convert.ToInt32(ak.Delay * 1000);
+                Thread.Sleep(delay);
+                if (delay >= 1000)
+                {
+                    _formDataSource.SetStatusText(string.Format("Waiting in {0} sec", ak.Delay));
+                }
             }
         }
 
@@ -147,7 +196,14 @@ namespace CoinAutoKeyweight.NET
 
         private void btnAssignBuffKey_Click(object sender, RoutedEventArgs e)
         {
-
+            _formDataSource.SetStatusText("Open Key Dialog.");
+            BuffDialog BuffDialog = new BuffDialog();
+            BuffDialog.DataContext = _formDataSource;
+            BuffDialog.Closed += (o, args) =>
+            {
+                ApplyChanged();
+            };
+            BuffDialog.ShowDialog();
         }
 
         private void btnChangeName_Click(object sender, RoutedEventArgs e)

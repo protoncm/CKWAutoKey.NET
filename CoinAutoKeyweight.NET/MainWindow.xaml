@@ -41,9 +41,6 @@
                 <MenuItem Header="Action" Click="btnAssignKey_Click" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}" />
                 <MenuItem Header="Buff" x:Name="btnAssignBuffKey" Click="btnAssignBuffKey_Click" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}" />
             </MenuItem>
-            <MenuItem Header="Settings">
-                <MenuItem Header="Buff" />
-            </MenuItem>
         </Menu>
         <!--<Label x:Name="txtAssignedKeyText" Grid.Row="1" Grid.Column="0" Content="Running Key" Margin="5" Grid.ColumnSpan="2"/>
         <TextBlock x:Name="txtAssignedKey" Grid.Row="1" Grid.Column="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=Config.DisplayAssignedKey.Key}" Margin="0.4,10,-0.8,9.2" VerticalAlignment="Center"  Foreground="Red"/>-->

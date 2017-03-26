@@ -15,6 +15,7 @@ namespace CoinAutoKeyweight.NET
         private List<Profile> _profiles = new List<Profile>();
         private Profile _currentProfile = null;
         private List<AssignedKey> _assignedKeys = null;
+        private List<AssignedKey> _assignedBuffKeys = null;
         private AssignedKey _displayAssignedKey = null;
         private string _currentKey = string.Empty;
         private bool _needInitialConfig = false;
@@ -49,7 +50,15 @@ namespace CoinAutoKeyweight.NET
                 OnPropertyChanged("AssignedKeys");
             }
         }
-
+        public List<AssignedKey> AssignedBuffKeys
+        {
+            get { return _assignedBuffKeys; }
+            set
+            {
+                _assignedBuffKeys = value;
+                OnPropertyChanged("AssignedBuffKeys");
+            }
+        }
         public string CurrentKey
         {
             get { return _currentKey; }
@@ -94,6 +103,7 @@ namespace CoinAutoKeyweight.NET
                         currentProfile.IsSelected = true;
                         CurrentProfile = currentProfile;
                         _assignedKeys = currentProfile.ActionKeys;
+                        _assignedBuffKeys = currentProfile.BuffKeys;
                         if (currentProfile.ActionKeys != null && currentProfile.ActionKeys.Count > 0)
                         {
                             _displayAssignedKey = currentProfile.ActionKeys[0];
@@ -106,27 +116,12 @@ namespace CoinAutoKeyweight.NET
                     }
                     else
                     {
-                        // create new profile
+                        // create "Untitled" profile
+                        CreateNewProfile("Untitled");
                     }
                 }
 
                 NeedInitialConfig = true;
-                //var keyList = ((List<Pr>)loadedConfig["ActionKey"]);
-                //if (keyList != null && keyList.Count > 0)
-                //{
-                //    _assignedKeys = keyList;
-                //    _displayAssignedKey = keyList[0];
-                //}
-                //else
-                //{
-                //    _assignedKeys = new List<AssignedKey>();
-                //    _displayAssignedKey = AssignedKey.Default;
-                //}
-
-                //_assignedWindow = (string)loadedConfig["AssignedActiveWindow"];
-                //AssignedWindowHandle = (string)loadedConfig["AssignedActiveWindowHandle"];
-                //_isSnapping = bool.Parse(loadedConfig["IsSnapping"].ToString());
-                //NeedInitialConfig = true;
             }
         }
 
@@ -137,9 +132,6 @@ namespace CoinAutoKeyweight.NET
             Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
             extractedValueDic.Add("Profile", Profiles);
             extractedValueDic.Add("CurrentProfileName", CurrentProfile.Name);
-            //extractedValueDic.Add("AssignedActiveWindow", _assignedWindow);
-            //extractedValueDic.Add("AssignedActiveWindowHandle", AssignedWindowHandle);
-            //extractedValueDic.Add("IsSnapping", _isSnapping);
             return extractedValueDic;
         }
 
@@ -153,6 +145,7 @@ namespace CoinAutoKeyweight.NET
             }
             CurrentProfile = newProfile;
             AssignedKeys = CurrentProfile.ActionKeys;
+            AssignedBuffKeys = CurrentProfile.BuffKeys;
             DisplayAssignedKey = AssignedKey.Default;
         }
 
@@ -165,6 +158,7 @@ namespace CoinAutoKeyweight.NET
                 selectedProfile.IsSelected = true;
                 CurrentProfile = selectedProfile;
                 _assignedKeys = selectedProfile.ActionKeys;
+                _assignedBuffKeys = selectedProfile.BuffKeys;
                 if (selectedProfile.ActionKeys != null && selectedProfile.ActionKeys.Count > 0)
                 {
                     _displayAssignedKey = selectedProfile.ActionKeys[0];
