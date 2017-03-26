@@ -57,7 +57,7 @@ namespace CoinAutoKeyweight.NET
                 {
                     _formDataSource.Config.DisplayAssignedKey = AssignedKey.Default;
                 }
-                _formDataSource.MessageText = string.Format("Updated Snapping = {0}.", chkSnipping.IsChecked?.ToString());
+                //_formDataSource.MessageText = string.Format("Updated Snapping = {0}.", chkSnipping.IsChecked?.ToString());
             }
         }
 
@@ -71,12 +71,16 @@ namespace CoinAutoKeyweight.NET
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
+            string processName = _formDataSource.Config.CurrentProfile.AssignedWindowName;
+#if DEBUG
+            processName = "Notepad";
+#endif
             if (!_formDataSource.IsRunning)
             {
-                Process[] processes = Process.GetProcessesByName(_formDataSource.Config.AssignedActiveWindow);
+                Process[] processes = Process.GetProcessesByName(processName);
                 if (processes.Length == 0)
                 {
-                    MessageBox.Show("Please open " + _formDataSource.Config.AssignedActiveWindow + ".", "Error", MessageBoxButton.OK);
+                    MessageBox.Show("Please open " + processName + ".", "Error", MessageBoxButton.OK);
                     return;
                 }
                 _formDataSource.IsRunning = true;
@@ -114,6 +118,8 @@ namespace CoinAutoKeyweight.NET
                 _formDataSource.MessageText = "Stopped / Waiting for next request.";
                 WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
+                //make sure current key was released
+                InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
             }
         }
 
@@ -123,12 +129,19 @@ namespace CoinAutoKeyweight.NET
             {
                 _formDataSource.IsRunning = false;
                 thread.Abort();
+                //make sure current key was released
+                InputServices.ReleaseKey(_formDataSource.Config.DisplayAssignedKey.Key);
             }
         }
 
         private void tbHoldTime_KeyUp(object sender, KeyEventArgs e)
         {
             ApplyChanged();
+        }
+
+        private void btnAssignBuffKey_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

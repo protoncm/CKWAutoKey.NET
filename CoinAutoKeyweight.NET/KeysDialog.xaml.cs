@@ -53,7 +53,7 @@ namespace CoinAutoKeyweight.NET
                 _formDataSource.Config.CurrentKey = "Any Key!";
                 keyCapturedDialog.Closed += (o, args) =>
                 {
-                    _formDataSource.Config.AssignedKeys.Add(new Models.AssignedKey()
+                    _formDataSource.Config.AssignedKeys.Add(new AssignedKey()
                     {
                         Key = _formDataSource.Config.CurrentKey
                     });

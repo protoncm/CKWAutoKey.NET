@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <local:FormDataSource x:Key="formDataSource" />
     </Application.Resources>
 </Application>

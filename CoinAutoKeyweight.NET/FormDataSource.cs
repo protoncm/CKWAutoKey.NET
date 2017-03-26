@@ -13,6 +13,9 @@ namespace CoinAutoKeyweight.NET
     {
         private string _messageText = "Ready.";
         private bool _isRunning = false;
+        private const string  APPLICATION_TITLE = "Bear Macro";
+        private string _formTitle = string.Empty;
+        
         public ConfigurationData Config
         {
             get;
@@ -30,7 +33,16 @@ namespace CoinAutoKeyweight.NET
                 Config = new ConfigurationData(XmlServices.Load());
             }
         }
-
+        public string FormTitle
+        {
+            get
+            {
+#if DEBUG
+                return string.Format("{0} {1}", APPLICATION_TITLE, Config.CurrentProfile != null ? "(" + Config.CurrentProfile.Name + ")" : string.Empty);
+#endif
+                return string.Format("{0} {1}", APPLICATION_TITLE, Config.CurrentProfile != null ? "(" + Config.CurrentProfile.Name + ")" : string.Empty);
+            }
+        }
         public bool IsRunning
         {
             get { return _isRunning; }

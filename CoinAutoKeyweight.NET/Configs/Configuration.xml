@@ -1,13 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Config>
-  <AssignedKey>
-    <key Duration="1000">A</key>
-    <key Duration="2000">B</key>
-    <key Duration="3000">C</key>
-  </AssignedKey>
-  <AssignedKeyCode>30</AssignedKeyCode>
-  <AssignedActiveWindow>MapleStory</AssignedActiveWindow>
-  <AssignedActiveWindowHandle>MapleStory</AssignedActiveWindowHandle>
-  <IsSnapping>True</IsSnapping>
-  <HoldTime>5</HoldTime>
+  <Profile Name="Profile1">
+    <ActionKey>
+      <key Duration="10" Delay="0.01">A</key>
+      <key Duration="10" Delay="0.01">B</key>
+      <key Duration="10" Delay="0.01">C</key>
+    </ActionKey>
+    <BuffKey>
+      <key Duration="10" Delay="0.01">U</key>
+      <key Duration="10" Delay="0.01">I</key>
+      <key Duration="10" Delay="0.01">O</key>
+    </BuffKey>
+    <Buff AutoBuff="True" StartIn="1" NextIn="5"/>
+    <AssignedActiveWindow>MapleStory</AssignedActiveWindow>
+    <AssignedActiveWindowHandle>MapleStory</AssignedActiveWindowHandle>
+    <IsSnapping>True</IsSnapping>
+  </Profile>
+  <CurrentProfile>Profile1</CurrentProfile>
 </Config>

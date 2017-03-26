@@ -107,6 +107,8 @@
       <DependentUpon>KeysDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\AssignedKey.cs" />
+    <Compile Include="Models\Buff.cs" />
+    <Compile Include="Models\Profile.cs" />
     <Compile Include="Services\InputServices.cs" />
     <Compile Include="KeyCapturedDialog.xaml.cs">
       <DependentUpon>KeyCapturedDialog.xaml</DependentUpon>

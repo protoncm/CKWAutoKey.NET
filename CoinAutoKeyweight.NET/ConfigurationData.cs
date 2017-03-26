@@ -10,14 +10,12 @@ namespace CoinAutoKeyweight.NET
 {
     public class ConfigurationData : PropertyChanges
     {
+        private List<Profile> _profiles = new List<Profile>();
+        private Profile _currentProfile = null;
         private List<AssignedKey> _assignedKeys = null;
         private AssignedKey _displayAssignedKey = null;
         private string _currentKey = string.Empty;
-        private string _assignedWindow = string.Empty;
-        private bool _isSnapping = true;
         private bool _needInitialConfig = false;
-        public string AssignedWindowHandle { get; set; }
-        public string AssignedKeyCode { get; set; }
         public bool NeedInitialConfig
         {
             get
@@ -40,26 +38,6 @@ namespace CoinAutoKeyweight.NET
             }
         }
 
-        public string AssignedActiveWindow
-        {
-            get { return _assignedWindow; }
-            set
-            {
-                _assignedWindow = value;
-                OnPropertyChanged("AssignedActiveWindow");
-            }
-        }
-
-        public bool IsSnapping
-        {
-            get { return _isSnapping; }
-            set
-            {
-                _isSnapping = value;
-                OnPropertyChanged("IsSnapping");
-            }
-        }
-
         public List<AssignedKey> AssignedKeys
         {
             get { return _assignedKeys; }
@@ -79,28 +57,73 @@ namespace CoinAutoKeyweight.NET
                 OnPropertyChanged("CurrentKey");
             }
         }
-
+        public List<Profile> Profiles
+        {
+            get
+            {
+                return _profiles;
+            }
+            set
+            {
+                _profiles = value;
+                OnPropertyChanged("Profiles");
+            }
+        }
+        public Profile CurrentProfile
+        {
+            get { return _currentProfile; }
+            set
+            {
+                _currentProfile = value;
+                OnPropertyChanged("CurrentProfile");
+            }
+        }
         public ConfigurationData(Dictionary<string, object> loadedConfig)
         {
             if(loadedConfig != null)
             {
-                var keyList = ((List<AssignedKey>)loadedConfig["AssignedKey"]);
-                if (keyList != null && keyList.Count > 0)
+                Profiles = (List<Profile>)loadedConfig["Profile"];
+                if(Profiles != null && Profiles.Count > 0)
                 {
-                    _assignedKeys = keyList;
-                    _displayAssignedKey = keyList[0];
+                    string currentProFileName = (string)loadedConfig["CurrentProfileName"];
+                    var currentProfile = Profiles.FirstOrDefault(a => a.Name == currentProFileName);
+                    if(currentProfile != null)
+                    {
+                        CurrentProfile = currentProfile;
+                        _assignedKeys = currentProfile.ActionKeys;
+                        if (currentProfile.ActionKeys != null && currentProfile.ActionKeys.Count > 0)
+                        {
+                            _displayAssignedKey = currentProfile.ActionKeys[0];
+                        }
+                        else
+                        {
+                            // create new key
+                            _displayAssignedKey = AssignedKey.Default;
+                        }
+                    }
+                    else
+                    {
+                        // create new profile
+                    }
                 }
-                else
-                {
-                    _assignedKeys = new List<AssignedKey>();
-                    _displayAssignedKey = AssignedKey.Default;
-                }
-                
-                _assignedWindow = (string)loadedConfig["AssignedActiveWindow"];
-                AssignedWindowHandle = (string)loadedConfig["AssignedActiveWindowHandle"];
-                AssignedKeyCode = (string)loadedConfig["AssignedKeyCode"];
-                _isSnapping = bool.Parse(loadedConfig["IsSnapping"].ToString());
+
                 NeedInitialConfig = true;
+                //var keyList = ((List<Pr>)loadedConfig["ActionKey"]);
+                //if (keyList != null && keyList.Count > 0)
+                //{
+                //    _assignedKeys = keyList;
+                //    _displayAssignedKey = keyList[0];
+                //}
+                //else
+                //{
+                //    _assignedKeys = new List<AssignedKey>();
+                //    _displayAssignedKey = AssignedKey.Default;
+                //}
+
+                //_assignedWindow = (string)loadedConfig["AssignedActiveWindow"];
+                //AssignedWindowHandle = (string)loadedConfig["AssignedActiveWindowHandle"];
+                //_isSnapping = bool.Parse(loadedConfig["IsSnapping"].ToString());
+                //NeedInitialConfig = true;
             }
         }
 
@@ -109,11 +132,11 @@ namespace CoinAutoKeyweight.NET
         public Dictionary<string, object> GetDataDic()
         {
             Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
-            extractedValueDic.Add("AssignedKey", _assignedKeys);
-            extractedValueDic.Add("AssignedKeyCode", AssignedKeyCode);
-            extractedValueDic.Add("AssignedActiveWindow", _assignedWindow);
-            extractedValueDic.Add("AssignedActiveWindowHandle", AssignedWindowHandle);
-            extractedValueDic.Add("IsSnapping", _isSnapping);
+            extractedValueDic.Add("Profile", Profiles);
+            extractedValueDic.Add("CurrentProfileName", CurrentProfile.Name);
+            //extractedValueDic.Add("AssignedActiveWindow", _assignedWindow);
+            //extractedValueDic.Add("AssignedActiveWindowHandle", AssignedWindowHandle);
+            //extractedValueDic.Add("IsSnapping", _isSnapping);
             return extractedValueDic;
         }
 

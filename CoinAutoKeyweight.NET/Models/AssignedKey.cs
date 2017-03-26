@@ -12,6 +12,16 @@ namespace CoinAutoKeyweight.NET.Models
         private double _duration = 10; // default is 10 sec.
         private int _order = 0;
         private bool _isChecked = false;
+        private double _delay = 0.1;
+        public double Delay
+        {
+            get { return _delay; }
+            set
+            {
+                _delay = value;
+                OnPropertyChanged("Delay");
+            }
+        }
         public string Key
         {
             get { return _key; }

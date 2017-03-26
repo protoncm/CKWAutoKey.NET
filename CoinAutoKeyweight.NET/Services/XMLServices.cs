@@ -17,31 +17,38 @@ namespace CoinAutoKeyweight.NET.Services
             {
                 XDocument document = XDocument.Load(XMLPath);
                 Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
-                var assignedKeyNode = document.Element("Config").Element("AssignedKey");
-                List<AssignedKey> assignedKeys = new List<AssignedKey>();
-                if(assignedKeyNode != null)
+                var profiles = document.Element("Config").Elements("Profile");
+                List<Profile> profileList = new List<Profile>();
+                // add profile
+                if(profiles != null)
                 {
-                    var keys = assignedKeyNode.Elements();
-                    if(keys != null && keys.Count() > 0)
+                    if(profiles != null && profiles.Count() > 0)
                     {
-                        int index = 1;
-                        foreach (var key in keys)
+                        Profile myProfile = new Profile();
+                        foreach (var profile in profiles)
                         {
-                            AssignedKey ak = new AssignedKey()
+                            myProfile.Name = profile.Attribute("Name").Value; // profile name
+                            myProfile.ActionKeys = profile.Element("ActionKey") != null ? BuildAssignedKey(profile.Element("ActionKey").Elements()) : new List<AssignedKey>();
+                            myProfile.BuffKeys = profile.Element("BuffKey") != null ? BuildAssignedKey(profile.Element("BuffKey").Elements()) : new List<AssignedKey>();
+                            // buff
+                            var buffElement = profile.Element("Buff");
+                            if(buffElement != null)
                             {
-                                Duration = key.Attribute("Duration").ToDouble(),
-                                Key = key.Value,
-                                Order = index++
-                            };
-                            assignedKeys.Add(ak);
+                                myProfile.Buff.AutoBuff = buffElement.Attribute("AutoBuff").GetValue<bool>();
+                                myProfile.Buff.StartIn = buffElement.Attribute("StartIn").GetValue<int>();
+                                myProfile.Buff.NextIn = buffElement.Attribute("NextIn").GetValue<int>();
+                            }
+                            
+                            myProfile.AssignedWindowName = profile.Element("AssignedActiveWindow")?.Value;
+                            myProfile.AssignedWindowHandle = profile.Element("AssignedActiveWindowHandle")?.Value;
+                            myProfile.IsSnapping = Convert.ToBoolean(profile.Element("IsSnapping")?.Value);
                         }
+                        profileList.Add(myProfile);
                     }
                 }
-                extractedValueDic.Add("AssignedKey", assignedKeys);
-                extractedValueDic.Add("AssignedKeyCode", document.Element("Config").Element("AssignedKeyCode").Value);
-                extractedValueDic.Add("AssignedActiveWindow", document.Element("Config").Element("AssignedActiveWindow").Value);
-                extractedValueDic.Add("AssignedActiveWindowHandle", document.Element("Config").Element("AssignedActiveWindowHandle").Value);
-                extractedValueDic.Add("IsSnapping", document.Element("Config").Element("IsSnapping").Value);
+
+                extractedValueDic.Add("Profile", profileList);
+                extractedValueDic.Add("CurrentProfileName", document.Element("Config").Element("CurrentProfile").Value);
                 return extractedValueDic;
             }
             catch (Exception ex)
@@ -49,33 +56,44 @@ namespace CoinAutoKeyweight.NET.Services
                 throw new Exception(ex.Message);
             }
         }
-
-
-            
         public static void Save(Dictionary<string, object> configs)
         {
             try
             {
                 XDocument document = XDocument.Load(XMLPath);
                 // save keys
-                var keys = configs["AssignedKey"] as List<AssignedKey>;
-                document.Element("Config").Element("AssignedKey").RemoveNodes();
-                if (keys != null && keys.Count > 0)
+                var profiles = configs["Profile"] as List<Profile>;
+                List<XElement> profileElements = new List<XElement>();
+                // remove profile node
+                document.Element("Config").RemoveNodes();
+                foreach (var profile in profiles)
                 {
-                    List<XElement> xKeys = new List<XElement>();
-                    foreach(var key in keys)
-                    {
-                        var k = new XElement("Key", key.Key);
-                        k.SetAttributeValue("Duration", key.Duration);
-                        xKeys.Add(k);
-                    }
+                    XElement profileElement = new XElement("Profile");
+                    XElement actionKeyElement = new XElement("ActionKey");
+                    XElement buffKeyElement = new XElement("BuffKey");
+                    XElement buffElement = new XElement("Buff");
+                    // set profile name
+                    profileElement.SetAttributeValue("Name", profile.Name);
+                    // action Key
+                    actionKeyElement.Add(BuildElements(profile.ActionKeys));
+                    // buff key
+                    buffKeyElement.Add(BuildElements(profile.BuffKeys));
+                    // buff detail
+                    buffElement.SetAttributeValue("AutoBuff", profile.Buff.AutoBuff);
+                    buffElement.SetAttributeValue("StartIn", profile.Buff.StartIn);
+                    buffElement.SetAttributeValue("NextIn", profile.Buff.NextIn);
 
-                    document.Element("Config").Element("AssignedKey").Add(xKeys);
+                    profileElement.Add(actionKeyElement);
+                    profileElement.Add(buffKeyElement);
+                    profileElement.Add(buffElement);
+                    profileElement.Add(new XElement("AssignedActiveWindow", profile.AssignedWindowName));
+                    profileElement.Add(new XElement("AssignedActiveWindowHandle", profile.AssignedWindowHandle));
+                    profileElement.Add(new XElement("IsSnapping", profile.IsSnapping));
+                    profileElements.Add(profileElement);
                 }
-                document.Element("Config").Element("AssignedKeyCode").SetValue(configs["AssignedKeyCode"]);
-                document.Element("Config").Element("AssignedActiveWindow").SetValue(configs["AssignedActiveWindow"]);
-                document.Element("Config").Element("AssignedActiveWindowHandle").SetValue(configs["AssignedActiveWindowHandle"]);
-                document.Element("Config").Element("IsSnapping").SetValue(configs["IsSnapping"]);
+
+                document.Element("Config").Add(profileElements);
+                document.Element("Config").Add(new XElement("CurrentProfile", configs["CurrentProfileName"]));
                 document.Save(XMLPath);
             }
             catch(Exception ex)
@@ -83,21 +101,48 @@ namespace CoinAutoKeyweight.NET.Services
                 throw new Exception(ex.Message);
             }
         }
+
+        private static List<XElement> BuildElements(List<AssignedKey> assignedKeys)
+        {
+            List<XElement> xKeys = new List<XElement>();
+            foreach (var actionKey in assignedKeys)
+            {
+                var k = new XElement("Key", actionKey.Key);
+                k.SetAttributeValue("Duration", actionKey.Duration);
+                k.SetAttributeValue("Delay", actionKey.Delay);
+                xKeys.Add(k);
+            }
+            return xKeys;
+        }
+
+        private static List<AssignedKey> BuildAssignedKey(IEnumerable<XElement> elements)
+        {
+            List<AssignedKey> actionKeys = new List<AssignedKey>();
+            foreach (var akey in elements)
+            {
+                AssignedKey ak = new AssignedKey()
+                {
+                    Duration = akey.Attribute("Duration").GetValue<double>(),
+                    Delay = akey.Attribute("Delay").GetValue<double>(),
+                    Key = akey.Value,
+                };
+                actionKeys.Add(ak);
+            }
+            return actionKeys;
+        }
     }
 
     public static class XmlHelper
     {
-        public static double ToDouble(this XAttribute attr)
+        public static T GetValue<T>(this XAttribute attr)
         {
             if(attr != null && !string.IsNullOrEmpty(attr.Value))
             {
-                double result = 0;
-                if(double.TryParse(attr.Value, out result))
-                {
-                    return result;
-                }
+                return (T)Convert.ChangeType(attr.Value, typeof(T));
             }
-            return 0;
+            return default(T);
         }
+
+
     }
 }
