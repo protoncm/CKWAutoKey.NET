@@ -99,7 +99,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChangeNameDialog.xaml.cs">
+      <DependentUpon>ChangeNameDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ConfigurationData.cs" />
+    <Compile Include="Converters\MenuItemEnableConverter.cs" />
     <Compile Include="Converters\SettingButtonStageConverter.cs" />
     <Compile Include="Converters\ButtonStageConverter.cs" />
     <Compile Include="FormDataSource.cs" />
@@ -117,6 +122,10 @@
     <Compile Include="Services\LogServices.cs" />
     <Compile Include="Services\XmlServices.cs" />
     <Compile Include="WindowsAPI.cs" />
+    <Page Include="ChangeNameDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="KeyCapturedDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

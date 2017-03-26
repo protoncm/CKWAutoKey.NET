@@ -24,9 +24,9 @@ namespace CoinAutoKeyweight.NET.Services
                 {
                     if(profiles != null && profiles.Count() > 0)
                     {
-                        Profile myProfile = new Profile();
                         foreach (var profile in profiles)
                         {
+                            Profile myProfile = new Profile();
                             myProfile.Name = profile.Attribute("Name").Value; // profile name
                             myProfile.ActionKeys = profile.Element("ActionKey") != null ? BuildAssignedKey(profile.Element("ActionKey").Elements()) : new List<AssignedKey>();
                             myProfile.BuffKeys = profile.Element("BuffKey") != null ? BuildAssignedKey(profile.Element("BuffKey").Elements()) : new List<AssignedKey>();
@@ -42,8 +42,8 @@ namespace CoinAutoKeyweight.NET.Services
                             myProfile.AssignedWindowName = profile.Element("AssignedActiveWindow")?.Value;
                             myProfile.AssignedWindowHandle = profile.Element("AssignedActiveWindowHandle")?.Value;
                             myProfile.IsSnapping = Convert.ToBoolean(profile.Element("IsSnapping")?.Value);
+                            profileList.Add(myProfile);
                         }
-                        profileList.Add(myProfile);
                     }
                 }
 

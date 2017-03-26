@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CoinAutoKeyweight.NET.Models
 {
@@ -14,7 +10,8 @@ namespace CoinAutoKeyweight.NET.Models
         private Buff _buff = new Buff();
         private bool _isSnapping = true;
         private string _assignedWindowName = string.Empty;
-        public string _assignedWindowHandle = string.Empty;
+        private string _assignedWindowHandle = string.Empty;
+        private bool _isSelected = false;
         public string Name
         {
             get { return _name; }
@@ -22,6 +19,15 @@ namespace CoinAutoKeyweight.NET.Models
             {
                 _name = value;
                 OnPropertyChanged("Name");
+            }
+        }
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged("IsSelected");
             }
         }
         public string AssignedWindowName

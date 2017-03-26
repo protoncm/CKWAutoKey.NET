@@ -10,6 +10,7 @@
     <Window.Resources>
         <converters:ButtonStageConverter x:Key="buttonStageConverter"/>
         <converters:SettingButtonStageConverter x:Key="settingButtonStageConverter"/>
+        <converters:MenuItemEnableConverter x:Key="menuItemEnableConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,12 +24,18 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <Menu x:Name="mainMenu" Grid.Row="0" Grid.ColumnSpan="3">
+            <Menu.Resources>
+                <Style x:Key="profileMenuItem" TargetType="MenuItem">
+                    <Setter Property="Header" Value="{Binding Name}"></Setter>
+                    <Setter Property="IsEnabled" Value="{Binding IsSelected, Converter={StaticResource menuItemEnableConverter}}"></Setter>
+                </Style>
+            </Menu.Resources>
             <MenuItem Header="File">
-                <MenuItem Header="New" />
-                <MenuItem Header="Open" />
-                <MenuItem Header="Save" />
+                <MenuItem Header="New" x:Name="btnNewProfile" Click="btnNewProfile_Click" />
+                <MenuItem Header="Open" x:Name="btnopen" ItemsSource="{Binding Source={StaticResource formDataSource}, Path=Config.Profiles, Mode=OneWay}" ItemContainerStyle="{StaticResource profileMenuItem}" Click="btnopen_Click" />
+                <MenuItem Header="Change Name" x:Name="btnChangeName" Click="btnChangeName_Click" />
                 <Separator/>
-                <MenuItem Header="Exit" />
+                <MenuItem Header="Exit" x:Name="btnExit" Click="btnExit_Click" />
             </MenuItem>
             <MenuItem Header="Key">
                 <MenuItem Header="Action" Click="btnAssignKey_Click" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}" />

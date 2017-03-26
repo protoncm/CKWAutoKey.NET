@@ -1,4 +1,5 @@
-﻿using CoinAutoKeyweight.NET.Services;
+﻿using CoinAutoKeyweight.NET.Models;
+using CoinAutoKeyweight.NET.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,20 +29,24 @@ namespace CoinAutoKeyweight.NET
             {
                 Config = new ConfigurationData(null);
                 _messageText = STATUS;
+                _formTitle = Config.CurrentProfile.Name;
             }
             else
             {
                 Config = new ConfigurationData(XmlServices.Load());
+                _formTitle = Config.CurrentProfile.Name;
             }
         }
         public string FormTitle
         {
             get
             {
-#if DEBUG
-                return string.Format("{0} {1}", APPLICATION_TITLE, Config.CurrentProfile != null ? "(" + Config.CurrentProfile.Name + ")" : string.Empty);
-#endif
-                return string.Format("{0} {1}", APPLICATION_TITLE, Config.CurrentProfile != null ? "(" + Config.CurrentProfile.Name + ")" : string.Empty);
+                return string.Format("{0} ({1})", APPLICATION_TITLE, _formTitle);
+            }
+            set
+            {
+                _formTitle = value;
+                OnPropertyChanged("FormTitle");
             }
         }
         public bool IsRunning
@@ -62,6 +67,11 @@ namespace CoinAutoKeyweight.NET
                 _messageText = string.Format("{0}: {1}", STATUS, value);
                 OnPropertyChanged("MessageText");
             }
+        }
+
+        public void SetStatusText(string text)
+        {
+            MessageText = text;
         }
     }
 }

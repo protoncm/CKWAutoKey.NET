@@ -15,23 +15,25 @@ using System.Windows.Shapes;
 namespace CoinAutoKeyweight.NET
 {
     /// <summary>
-    /// Interaction logic for KeyCapturedDialog.xaml
+    /// Interaction logic for ChangeNameDialog.xaml
     /// </summary>
-    public partial class KeyCapturedDialog : Window
+    public partial class ChangeNameDialog : Window
     {
-        public KeyCapturedDialog()
+        public bool isCancel { get; set; }
+        public ChangeNameDialog()
         {
             InitializeComponent();
             ShowInTaskbar = false;
-        }
-
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-            txtKey.Text = e.Key.ToString();
+            isCancel = false;
         }
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
+            Close();
+        }
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            isCancel = true;
             Close();
         }
     }

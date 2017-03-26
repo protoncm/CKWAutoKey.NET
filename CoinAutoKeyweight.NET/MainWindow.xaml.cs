@@ -43,7 +43,6 @@ namespace CoinAutoKeyweight.NET
             keyDialog.Closed += (o, args) =>
             {
                 ApplyChanged();
-                _formDataSource.MessageText = "Saved Key.";
             };
             keyDialog.ShowDialog();
         }
@@ -66,6 +65,7 @@ namespace CoinAutoKeyweight.NET
             if(_formDataSource != null)
             {
                 XmlServices.Save(_formDataSource.Config.GetDataDic());
+                _formDataSource.SetStatusText("Saved Changes.");
             }
         }
 
@@ -94,7 +94,7 @@ namespace CoinAutoKeyweight.NET
                         for (int i = 0; i < _formDataSource.Config.AssignedKeys.Count; i++)
                         {
                             _formDataSource.Config.DisplayAssignedKey = _formDataSource.Config.AssignedKeys[i];
-                            _formDataSource.MessageText = string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration);
+                            _formDataSource.SetStatusText(string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration));
                             Stopwatch timer = new Stopwatch();
                             timer.Start();
                             while (timer.Elapsed < TimeSpan.FromSeconds(_formDataSource.Config.DisplayAssignedKey.Duration))
@@ -121,7 +121,7 @@ namespace CoinAutoKeyweight.NET
             else
             {
                 _formDataSource.IsRunning = false;
-                _formDataSource.MessageText = "Stopped / Waiting for next request.";
+                _formDataSource.SetStatusText("Stopped / Waiting for next request.");
                 WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
                 //make sure current key was released
@@ -148,6 +148,81 @@ namespace CoinAutoKeyweight.NET
         private void btnAssignBuffKey_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void btnChangeName_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeNameDialog changeNamedialog = new ChangeNameDialog();
+            changeNamedialog.tbName.Text = _formDataSource.Config.CurrentProfile.Name;
+            changeNamedialog.Closing += (s, arg) => {
+                if (string.IsNullOrEmpty(changeNamedialog.tbName.Text) && !changeNamedialog.isCancel)
+                {
+                    MessageBox.Show("Please input your name!");
+                    arg.Cancel = true;
+                }
+                else if (!changeNamedialog.isCancel)
+                {
+                    string newName = changeNamedialog.tbName.Text;
+                    string oldName = _formDataSource.Config.CurrentProfile.Name;
+                    if (_formDataSource.Config.Profiles.Where(a => a.Name != oldName).Any(a => a.Name == newName))
+                    {
+                        MessageBox.Show(string.Format("\"{0}\" is already exist.", newName), "Error.");
+                        arg.Cancel = true;
+                    }
+                    else
+                    {
+                        _formDataSource.Config.CurrentProfile.Name = newName;
+                        _formDataSource.FormTitle = newName;
+                        ApplyChanged();
+                    }
+                }
+            };
+            changeNamedialog.ShowDialog();
+        }
+
+        private void btnNewProfile_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeNameDialog changeNamedialog = new ChangeNameDialog();
+            changeNamedialog.Closing += (s, arg) => {
+                if (string.IsNullOrEmpty(changeNamedialog.tbName.Text) && !changeNamedialog.isCancel)
+                {
+                    MessageBox.Show("Please input your name!");
+                    arg.Cancel = true;
+                }
+                else if (!changeNamedialog.isCancel)
+                {
+                    string newName = changeNamedialog.tbName.Text;
+                    if (_formDataSource.Config.Profiles.Any(a => a.Name == newName))
+                    {
+                        MessageBox.Show(string.Format("\"{0}\" is already exist.", newName), "Error.");
+                        arg.Cancel = true;
+                    }
+                    else
+                    {
+                        _formDataSource.Config.CreateNewProfile(newName);
+                        _formDataSource.FormTitle = newName;
+                        btnopen.Items.Refresh();
+                        ApplyChanged();
+                    }
+                }
+            };
+            changeNamedialog.ShowDialog();
+        }
+
+        private void btnExit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void btnopen_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedProfile = (e.OriginalSource as MenuItem).DataContext as Profile;
+            if(selectedProfile != null)
+            {
+                _formDataSource.Config.LoadProfile(selectedProfile);
+                _formDataSource.FormTitle = selectedProfile.Name;
+                _formDataSource.SetStatusText(string.Format("{0} is loaded.", selectedProfile.Name));
+            }
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿using CoinAutoKeyweight.NET.Models;
+﻿using CoinAutoKeyweight.NET.Commands;
+using CoinAutoKeyweight.NET.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CoinAutoKeyweight.NET
 {
@@ -89,6 +91,7 @@ namespace CoinAutoKeyweight.NET
                     var currentProfile = Profiles.FirstOrDefault(a => a.Name == currentProFileName);
                     if(currentProfile != null)
                     {
+                        currentProfile.IsSelected = true;
                         CurrentProfile = currentProfile;
                         _assignedKeys = currentProfile.ActionKeys;
                         if (currentProfile.ActionKeys != null && currentProfile.ActionKeys.Count > 0)
@@ -140,5 +143,38 @@ namespace CoinAutoKeyweight.NET
             return extractedValueDic;
         }
 
+        public void CreateNewProfile(string newName)
+        {
+            Profile newProfile = new Profile() { Name = newName, IsSelected = true };
+            Profiles.Add(newProfile);
+            if(CurrentProfile != null)
+            {
+                CurrentProfile.IsSelected = false;
+            }
+            CurrentProfile = newProfile;
+            AssignedKeys = CurrentProfile.ActionKeys;
+            DisplayAssignedKey = AssignedKey.Default;
+        }
+
+        public void LoadProfile(Profile selectedProfile)
+        {
+            var previousProfile = CurrentProfile;
+            previousProfile.IsSelected = false;
+            if (selectedProfile != null)
+            {
+                selectedProfile.IsSelected = true;
+                CurrentProfile = selectedProfile;
+                _assignedKeys = selectedProfile.ActionKeys;
+                if (selectedProfile.ActionKeys != null && selectedProfile.ActionKeys.Count > 0)
+                {
+                    _displayAssignedKey = selectedProfile.ActionKeys[0];
+                }
+                else
+                {
+                    // create new key
+                    _displayAssignedKey = AssignedKey.Default;
+                }
+            }
+        }
     }
 }
