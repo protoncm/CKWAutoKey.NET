@@ -3,9 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         xmlns:converters="clr-namespace:CoinAutoKeyweight.NET.Converters"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         Title="{Binding Source={StaticResource formDataSource}, Path=FormTitle, Mode=OneWay}" Height="400" Width="300" ResizeMode="NoResize" Closing="Window_Closing" Icon="funshine_bear.ico">
     <Window.Resources>
         <converters:ButtonStageConverter x:Key="buttonStageConverter"/>
@@ -18,11 +26,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Menu x:Name="mainMenu" Grid.Row="0" Grid.ColumnSpan="3">
             <Menu.Resources>
@@ -43,7 +51,9 @@
                 <MenuItem Header="Buff" x:Name="btnAssignBuffKey" Click="btnAssignBuffKey_Click" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}" />
             </MenuItem>
         </Menu>
-        <WrapPanel Orientation="Horizontal" Grid.Row="1">
+        <WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,0,0">
+            <Separator/>
+            <materialDesign:PackIcon Kind="Clock"/>
             <TextBlock Text="{Binding Source={StaticResource formDataSource}, Path=RunningTime}" Margin="5,0" />
         </WrapPanel>
         <TextBox x:Name="tbLog" Grid.Row="2" Grid.ColumnSpan="3" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" Margin="5" />

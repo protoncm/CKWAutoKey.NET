@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         mc:Ignorable="d"
-        Title="Your name" Height="100" Width="200" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
+        Title="Your name" Height="120" Width="200" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>

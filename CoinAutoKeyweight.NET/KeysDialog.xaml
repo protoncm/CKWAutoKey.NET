@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         mc:Ignorable="d"
-        Title="Action Keys" Height="300" Width="250" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Action Keys" Height="350" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="30" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
