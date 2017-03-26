@@ -24,7 +24,7 @@ namespace CoinAutoKeyweight.NET
             {
                 Config = new ConfigurationData(null);
                 _messageText = STATUS;
-                _formTitle = Config.CurrentProfile.Name;
+                _formTitle = APPLICATION_TITLE;
             }
             else
             {

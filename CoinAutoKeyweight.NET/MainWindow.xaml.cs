@@ -21,6 +21,7 @@ namespace CoinAutoKeyweight.NET
         private IntPtr WindowHandle;
         private Thread thread;
         private Stopwatch runningTime;
+        private System.Timers.Timer timer;
         public MainWindow()
         {
             InitializeComponent();
@@ -66,7 +67,7 @@ namespace CoinAutoKeyweight.NET
         {
             string processName = _formDataSource.Config.CurrentProfile.AssignedWindowName;
             runningTime = new Stopwatch();
-            System.Timers.Timer timer = new System.Timers.Timer();
+            timer = new System.Timers.Timer();
             timer.Interval = 1000;
 #if DEBUG
             processName = "Notepad";
@@ -191,6 +192,10 @@ namespace CoinAutoKeyweight.NET
         {
             if(thread != null && WindowHandle != null)
             {
+                runningTime.Stop();
+                timer.Elapsed -= Timer_Elapsed;
+                timer.Stop();
+                timer.Enabled = false;
                 _formDataSource.IsRunning = false;
                 thread.Abort();
                 //make sure current key was released
