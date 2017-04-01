@@ -17,5 +17,6 @@ namespace CoinAutoKeyweight.NET.Services
                 file.WriteLine(string.Format("{0} : {1}", DateTime.Now, message));
             }
         }
+
     }
 }

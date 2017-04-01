@@ -16,7 +16,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="tbName" Grid.Row="0" Margin="5" Grid.ColumnSpan="2" />
+        <TextBox x:Name="tbName" Grid.Row="0" Margin="5" Grid.ColumnSpan="2" KeyUp="tbName_KeyUp" />
         <Button x:Name="btnOk" Content="OK" Grid.Column="0" Grid.Row="1" Margin="5" Click="btnOk_Click" />
         <Button x:Name="btnCancel" Content="Cancel" Grid.Column="1" Grid.Row="1" Margin="5" Click="btnCancel_Click" />
     </Grid>

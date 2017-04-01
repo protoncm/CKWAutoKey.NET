@@ -13,6 +13,7 @@ namespace CoinAutoKeyweight.NET
     public class ConfigurationData : PropertyChanges
     {
         private List<Profile> _profiles = new List<Profile>();
+        private Settings _settings = null;
         private Profile _currentProfile = null;
         private List<AssignedKey> _assignedKeys = null;
         private List<AssignedKey> _assignedBuffKeys = null;
@@ -89,6 +90,15 @@ namespace CoinAutoKeyweight.NET
                 OnPropertyChanged("CurrentProfile");
             }
         }
+        public Settings Settings
+        {
+            get { return _settings; }
+            set
+            {
+                _settings = value;
+                OnPropertyChanged("Settings");
+            }
+        }
         public ConfigurationData(Dictionary<string, object> loadedConfig)
         {
             if(loadedConfig != null)
@@ -121,6 +131,12 @@ namespace CoinAutoKeyweight.NET
                     }
                 }
 
+                Settings = (Settings)loadedConfig["Settings"];
+                if(Settings == null)
+                {
+                    Settings = new Settings();
+                }
+
                 NeedInitialConfig = true;
             }
         }
@@ -132,6 +148,7 @@ namespace CoinAutoKeyweight.NET
             Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
             extractedValueDic.Add("Profile", Profiles);
             extractedValueDic.Add("CurrentProfileName", CurrentProfile.Name);
+            extractedValueDic.Add("Settings", Settings);
             return extractedValueDic;
         }
 

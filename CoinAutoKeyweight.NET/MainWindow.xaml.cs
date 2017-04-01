@@ -58,14 +58,14 @@ namespace CoinAutoKeyweight.NET
         {
             if(_formDataSource != null)
             {
-                XmlServices.Save(_formDataSource.Config.GetDataDic());
+                XmlServices.Save(_formDataSource.Config.GetDataDic(), SourceChanged.Profile);
                 _formDataSource.SetStatusText("Saved Changes.");
             }
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            string processName = _formDataSource.Config.CurrentProfile.AssignedWindowName;
+            string processName = _formDataSource.Config.Settings.AssignedWindowName;
             runningTime = new Stopwatch();
             timer = new System.Timers.Timer();
             timer.Interval = 1000;
@@ -293,6 +293,17 @@ namespace CoinAutoKeyweight.NET
                 _formDataSource.FormTitle = selectedProfile.Name;
                 _formDataSource.SetStatusText(string.Format("{0} is loaded.", selectedProfile.Name));
             }
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SettiingDialog settingDialog = new SettiingDialog();
+            settingDialog.Closing += (s, arg) =>
+            {
+                XmlServices.Save(_formDataSource.Config.GetDataDic(), SourceChanged.Settings);
+                _formDataSource.SetStatusText("Save Settings.");
+            };
+            settingDialog.ShowDialog();
         }
     }
 }

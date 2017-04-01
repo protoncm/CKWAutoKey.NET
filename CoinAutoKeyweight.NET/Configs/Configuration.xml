@@ -12,9 +12,11 @@
       <key Duration="10" Delay="0.01">O</key>
     </BuffKey>
     <Buff AutoBuff="True" StartIn="1" NextIn="5"/>
+  </Profile>
+  <CurrentProfile>Profile1</CurrentProfile>
+  <Settings>
     <AssignedActiveWindow>MapleStory</AssignedActiveWindow>
     <AssignedActiveWindowHandle>MapleStory</AssignedActiveWindowHandle>
     <IsSnapping>True</IsSnapping>
-  </Profile>
-  <CurrentProfile>Profile1</CurrentProfile>
+  </Settings>
 </Config>

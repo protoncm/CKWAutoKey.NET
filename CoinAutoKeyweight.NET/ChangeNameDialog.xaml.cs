@@ -24,5 +24,11 @@ namespace CoinAutoKeyweight.NET
             isCancel = true;
             Close();
         }
+
+        private void tbName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                Close();
+        }
     }
 }

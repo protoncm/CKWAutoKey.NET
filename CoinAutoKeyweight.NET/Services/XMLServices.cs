@@ -6,6 +6,10 @@ using System.Xml.Linq;
 
 namespace CoinAutoKeyweight.NET.Services
 {
+    public enum SourceChanged
+    {
+        Profile, Settings
+    }
     public class XmlServices
     {
         private const string XMLPath = @"./Configs/Configuration.xml";
@@ -15,6 +19,7 @@ namespace CoinAutoKeyweight.NET.Services
             {
                 XDocument document = XDocument.Load(XMLPath);
                 Dictionary<string, object> extractedValueDic = new Dictionary<string, object>();
+                // Load profile
                 var profiles = document.Element("Config").Elements("Profile");
                 List<Profile> profileList = new List<Profile>();
                 // add profile
@@ -37,9 +42,6 @@ namespace CoinAutoKeyweight.NET.Services
                                 myProfile.Buff.NextIn = buffElement.Attribute("NextIn").GetValue<int>();
                             }
                             
-                            myProfile.AssignedWindowName = profile.Element("AssignedActiveWindow")?.Value;
-                            myProfile.AssignedWindowHandle = profile.Element("AssignedActiveWindowHandle")?.Value;
-                            myProfile.IsSnapping = Convert.ToBoolean(profile.Element("IsSnapping")?.Value);
                             profileList.Add(myProfile);
                         }
                     }
@@ -47,6 +49,14 @@ namespace CoinAutoKeyweight.NET.Services
 
                 extractedValueDic.Add("Profile", profileList);
                 extractedValueDic.Add("CurrentProfileName", document.Element("Config").Element("CurrentProfile").Value);
+                // load setting
+                var settings = document.Element("Config").Element("Settings");
+                Settings _settings = new Settings();
+                _settings.AssignedWindowName = settings.Element("AssignedActiveWindow")?.Value;
+                _settings.AssignedWindowHandle = settings.Element("AssignedActiveWindowHandle")?.Value;
+                _settings.IsSnapping = (bool)Convert.ChangeType(settings.Element("IsSnapping")?.Value, typeof(bool));
+                extractedValueDic.Add("Settings", _settings);
+
                 return extractedValueDic;
             }
             catch (Exception ex)
@@ -54,44 +64,58 @@ namespace CoinAutoKeyweight.NET.Services
                 throw new Exception(ex.Message);
             }
         }
-        public static void Save(Dictionary<string, object> configs)
+        public static void Save(Dictionary<string, object> configs, SourceChanged sourceChanged)
         {
             try
             {
                 XDocument document = XDocument.Load(XMLPath);
-                // save keys
-                var profiles = configs["Profile"] as List<Profile>;
-                List<XElement> profileElements = new List<XElement>();
-                // remove profile node
-                document.Element("Config").RemoveNodes();
-                foreach (var profile in profiles)
+                // Save Profile
+                if(sourceChanged == SourceChanged.Profile)
                 {
-                    XElement profileElement = new XElement("Profile");
-                    XElement actionKeyElement = new XElement("ActionKey");
-                    XElement buffKeyElement = new XElement("BuffKey");
-                    XElement buffElement = new XElement("Buff");
-                    // set profile name
-                    profileElement.SetAttributeValue("Name", profile.Name);
-                    // action Key
-                    actionKeyElement.Add(BuildElements(profile.ActionKeys));
-                    // buff key
-                    buffKeyElement.Add(BuildElements(profile.BuffKeys));
-                    // buff detail
-                    buffElement.SetAttributeValue("AutoBuff", profile.Buff.AutoBuff);
-                    buffElement.SetAttributeValue("StartIn", profile.Buff.StartIn);
-                    buffElement.SetAttributeValue("NextIn", profile.Buff.NextIn);
+                    var profiles = configs["Profile"] as List<Profile>;
+                    List<XElement> profileElements = new List<XElement>();
+                    // remove profile node
+                    document.Element("Config").Elements("Profile").Remove();
+                    foreach (var profile in profiles)
+                    {
+                        XElement profileElement = new XElement("Profile");
+                        XElement actionKeyElement = new XElement("ActionKey");
+                        XElement buffKeyElement = new XElement("BuffKey");
+                        XElement buffElement = new XElement("Buff");
+                        // set profile name
+                        profileElement.SetAttributeValue("Name", profile.Name);
+                        // action Key
+                        actionKeyElement.Add(BuildElements(profile.ActionKeys));
+                        // buff key
+                        buffKeyElement.Add(BuildElements(profile.BuffKeys));
+                        // buff detail
+                        buffElement.SetAttributeValue("AutoBuff", profile.Buff.AutoBuff);
+                        buffElement.SetAttributeValue("StartIn", profile.Buff.StartIn);
+                        buffElement.SetAttributeValue("NextIn", profile.Buff.NextIn);
 
-                    profileElement.Add(actionKeyElement);
-                    profileElement.Add(buffKeyElement);
-                    profileElement.Add(buffElement);
-                    profileElement.Add(new XElement("AssignedActiveWindow", profile.AssignedWindowName));
-                    profileElement.Add(new XElement("AssignedActiveWindowHandle", profile.AssignedWindowHandle));
-                    profileElement.Add(new XElement("IsSnapping", profile.IsSnapping));
-                    profileElements.Add(profileElement);
+                        profileElement.Add(actionKeyElement);
+                        profileElement.Add(buffKeyElement);
+                        profileElement.Add(buffElement);
+                        profileElements.Add(profileElement);
+                    }
+
+                    document.Element("Config").Add(profileElements);
+                    document.Element("Config").Add(new XElement("CurrentProfile", configs["CurrentProfileName"]));
+                }
+                else if(sourceChanged == SourceChanged.Settings)
+                {
+                    var settings = (Settings)configs["Settings"];
+                    if (settings != null)
+                    {
+                        document.Element("Config").Elements("Settings").Remove();
+                        XElement settingElm = new XElement("Settings");
+                        settingElm.Add(new XElement("AssignedActiveWindow", settings.AssignedWindowName));
+                        settingElm.Add(new XElement("AssignedActiveWindowHandle", settings.AssignedWindowHandle));
+                        settingElm.Add(new XElement("IsSnapping", settings.IsSnapping));
+                        document.Element("Config").Add(settingElm);
+                    }
                 }
 
-                document.Element("Config").Add(profileElements);
-                document.Element("Config").Add(new XElement("CurrentProfile", configs["CurrentProfileName"]));
                 document.Save(XMLPath);
             }
             catch(Exception ex)

@@ -50,6 +50,7 @@
                 <MenuItem Header="Action" Click="btnAssignKey_Click" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}" />
                 <MenuItem Header="Buff" x:Name="btnAssignBuffKey" Click="btnAssignBuffKey_Click" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource settingButtonStageConverter}}" />
             </MenuItem>
+            <MenuItem Header="Settings" x:Name="btnSettings" Click="btnSettings_Click" />
         </Menu>
         <WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,0,0">
             <Separator/>

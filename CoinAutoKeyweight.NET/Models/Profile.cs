@@ -8,9 +8,6 @@ namespace CoinAutoKeyweight.NET.Models
         private List<AssignedKey> _actionKeys = new List<AssignedKey>();
         private List<AssignedKey> _buffKeys = new List<AssignedKey>();
         private Buff _buff = new Buff();
-        private bool _isSnapping = true;
-        private string _assignedWindowName = string.Empty;
-        private string _assignedWindowHandle = string.Empty;
         private bool _isSelected = false;
         public string Name
         {
@@ -30,24 +27,7 @@ namespace CoinAutoKeyweight.NET.Models
                 OnPropertyChanged("IsSelected");
             }
         }
-        public string AssignedWindowName
-        {
-            get { return _assignedWindowName; }
-            set
-            {
-                _assignedWindowName = value;
-                OnPropertyChanged("AssignedWindowName");
-            }
-        }
-        public string AssignedWindowHandle
-        {
-            get { return _assignedWindowHandle; }
-            set
-            {
-                _assignedWindowHandle = value;
-                OnPropertyChanged("AssignedWindowHandle");
-            }
-        }
+       
         public Buff Buff
         {
             get { return _buff; }
@@ -74,16 +54,6 @@ namespace CoinAutoKeyweight.NET.Models
             {
                 _buffKeys = value;
                 OnPropertyChanged("BuffKeys");
-            }
-        }
-
-        public bool IsSnapping
-        {
-            get { return _isSnapping; }
-            set
-            {
-                _isSnapping = value;
-                OnPropertyChanged("IsSnapping");
             }
         }
     }
