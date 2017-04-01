@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System;
+using System.Collections.Generic;
 
 namespace CoinAutoKeyweight.NET
 {
@@ -13,12 +14,15 @@ namespace CoinAutoKeyweight.NET
         private const string  APPLICATION_TITLE = "Bear Macro";
         private string _formTitle = string.Empty;
         private string _runningTime = "00:00:00";
-        private string _logMessage = @"Coming soon!";
+        private string _logMessage = string.Empty;
+        private const int MAX_MESSAGE_LOG = 100;
+        private Queue<string> messageStore = new Queue<string>(MAX_MESSAGE_LOG);
         public ConfigurationData Config
         {
             get;
             private set;
         }
+
         public FormDataSource()
         {
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
@@ -80,17 +84,24 @@ namespace CoinAutoKeyweight.NET
 
         public string LogMessage
         {
-            get { return _logMessage; }
-            set
+            get
             {
-                _logMessage = value;
-                OnPropertyChanged("LogMessage");
+                return string.Join("\r\n", messageStore);
             }
+        }
+
+        public void SetMessageLog(string message)
+        {
+            if (messageStore.Count == MAX_MESSAGE_LOG)
+                messageStore.Dequeue();
+            messageStore.Enqueue(message);
+            OnPropertyChanged("LogMessage");
         }
 
         public void SetStatusText(string text)
         {
             MessageText = text;
+            SetMessageLog(text);
         }
 
         public void SetRunningTime(double totalSeconds = 0)

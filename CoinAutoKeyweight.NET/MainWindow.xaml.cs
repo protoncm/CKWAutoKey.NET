@@ -31,7 +31,7 @@ namespace CoinAutoKeyweight.NET
 
         private void btnAssignKey_Click(object sender, RoutedEventArgs e)
         {
-            _formDataSource.SetStatusText("Open Key Dialog.");
+            _formDataSource.SetStatusText("! Open Key Dialog.");
             KeysDialog keyDialog = new KeysDialog();
             keyDialog.DataContext = _formDataSource;
             keyDialog.Closed += (o, args) =>
@@ -59,7 +59,7 @@ namespace CoinAutoKeyweight.NET
             if(_formDataSource != null)
             {
                 XmlServices.Save(_formDataSource.Config.GetDataDic(), SourceChanged.Profile);
-                _formDataSource.SetStatusText("Saved Changes.");
+                _formDataSource.SetStatusText("> Saved Profiles.");
             }
         }
 
@@ -74,6 +74,7 @@ namespace CoinAutoKeyweight.NET
 #endif
             if (!_formDataSource.IsRunning)
             {
+                _formDataSource.SetStatusText("** Started **");
                 timer.Elapsed += Timer_Elapsed;
 
                 Process[] processes = Process.GetProcessesByName(processName);
@@ -119,7 +120,7 @@ namespace CoinAutoKeyweight.NET
                         {
                             var activeKeyStroke = _formDataSource.Config.AssignedKeys[i];
                             _formDataSource.Config.DisplayAssignedKey = activeKeyStroke;
-                            _formDataSource.SetStatusText(string.Format("Holding Key {0} in {1} sec.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration));
+                            _formDataSource.SetStatusText($"> Press Key {_formDataSource.Config.DisplayAssignedKey.Key}. (Holding {_formDataSource.Config.DisplayAssignedKey.Duration} sec)");
                             // do action
                             DoAction(activeKeyStroke);
                         }
@@ -136,7 +137,7 @@ namespace CoinAutoKeyweight.NET
                 timer.Stop();
                 timer.Enabled = false;
                 _formDataSource.IsRunning = false;
-                _formDataSource.SetStatusText("Stopped / Waiting for next request.");
+                _formDataSource.SetStatusText("** Stopped **");
                 _formDataSource.SetRunningTime();
                 WindowsAPI.SwitchWindow(WindowHandle);
                 thread.Abort();
@@ -155,7 +156,7 @@ namespace CoinAutoKeyweight.NET
             foreach (var buffKey in keys)
             {
                 _formDataSource.Config.DisplayAssignedKey = buffKey;
-                _formDataSource.SetStatusText(string.Format("Buffing Key {0} for every {1} min.", _formDataSource.Config.DisplayAssignedKey.Key, _formDataSource.Config.DisplayAssignedKey.Duration));
+                _formDataSource.SetStatusText($"> Buffing Key {_formDataSource.Config.DisplayAssignedKey.Key}.");
                 // do action
                 DoAction(buffKey, true);
                 buffKey.Timestamp = runningStopwatch.Elapsed.TotalMinutes;
@@ -183,7 +184,7 @@ namespace CoinAutoKeyweight.NET
                 Thread.Sleep(delay);
                 if (delay >= 1000)
                 {
-                    _formDataSource.SetStatusText(string.Format("Waiting in {0} sec", ak.Delay));
+                    _formDataSource.SetStatusText($"! Waiting in {ak.Delay} sec");
                 }
             }
         }
@@ -210,7 +211,7 @@ namespace CoinAutoKeyweight.NET
 
         private void btnAssignBuffKey_Click(object sender, RoutedEventArgs e)
         {
-            _formDataSource.SetStatusText("Open Key Dialog.");
+            _formDataSource.SetStatusText("! Open Buff Dialog.");
             BuffDialog BuffDialog = new BuffDialog();
             BuffDialog.DataContext = _formDataSource;
             BuffDialog.Closed += (o, args) =>
@@ -304,6 +305,12 @@ namespace CoinAutoKeyweight.NET
                 _formDataSource.SetStatusText("Save Settings.");
             };
             settingDialog.ShowDialog();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            tbLogMessage.SelectionStart = tbLogMessage.Text.Length;
+            tbLogMessage.ScrollToLine(tbLogMessage.GetLineIndexFromCharacterIndex(tbLogMessage.SelectionStart));
         }
     }
 }

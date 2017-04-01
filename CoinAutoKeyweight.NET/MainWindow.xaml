@@ -14,7 +14,7 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="{Binding Source={StaticResource formDataSource}, Path=FormTitle, Mode=OneWay}" Height="400" Width="300" ResizeMode="NoResize" Closing="Window_Closing" Icon="funshine_bear.ico">
+        Title="{Binding Source={StaticResource formDataSource}, Path=FormTitle, Mode=OneWay}" Height="500" Width="300" ResizeMode="NoResize" Closing="Window_Closing" Icon="funshine_bear.ico">
     <Window.Resources>
         <converters:ButtonStageConverter x:Key="buttonStageConverter"/>
         <converters:SettingButtonStageConverter x:Key="settingButtonStageConverter"/>
@@ -52,16 +52,19 @@
             </MenuItem>
             <MenuItem Header="Settings" x:Name="btnSettings" Click="btnSettings_Click" />
         </Menu>
-        <WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,0,0">
+        <Separator Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Top"/>
+        <WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10,10,0,0">
             <Separator/>
             <materialDesign:PackIcon Kind="Clock"/>
             <TextBlock Text="{Binding Source={StaticResource formDataSource}, Path=RunningTime}" Margin="5,0" />
         </WrapPanel>
-        <TextBox Grid.Row="2" Grid.ColumnSpan="3" Margin="5" 
+        
+        <TextBox x:Name="tbLogMessage" Grid.Row="2" Grid.ColumnSpan="3" Margin="5" 
                  materialDesign:TextFieldAssist.DecorationVisibility="Hidden" 
                  AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" 
-                 Text="{Binding Source={StaticResource formDataSource}, Path=LogMessage }" />
-        <Button x:Name="btnStart" Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Margin="5" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}" Click="btnStart_Click" FontSize="20" Height="30" Content="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource buttonStageConverter}}">
+                 Text="{Binding Source={StaticResource formDataSource}, Path=LogMessage, Mode=OneWay}" TextChanged="TextBox_TextChanged" Background="#333" Foreground="Yellow" Padding="5" />
+        <Separator Grid.ColumnSpan="2" Grid.Row="3" VerticalAlignment="Top"/>
+        <Button x:Name="btnStart" Grid.ColumnSpan="3" Grid.Row="3" Grid.Column="0" Margin="5,10,5,5" IsEnabled="{Binding Source={StaticResource formDataSource}, Path=Config.NeedInitialConfig}" Click="btnStart_Click" FontSize="20" Height="30" Content="{Binding Source={StaticResource formDataSource}, Path=IsRunning, Converter={StaticResource buttonStageConverter}}">
         </Button>
         <StatusBar Grid.Row="4" Grid.ColumnSpan="3">
             <TextBlock x:Name="txtMessageText" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Source={StaticResource formDataSource}, Path=MessageText}" Margin="5,0" HorizontalAlignment="Center" />
