@@ -7,7 +7,7 @@
         xmlns:helper="clr-namespace:CoinAutoKeyweight.NET.Helpers"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Buff Key and config" Height="350" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Passive Key and Config" Height="350" Width="300" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="funshine_bear.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -23,8 +23,8 @@
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn  Binding="{Binding IsChecked, Mode=TwoWay}" />
                 <DataGridTextColumn Header="Key" Width="50" Binding="{Binding Key, Mode=TwoWay}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Every (mins.)" Width="*" Binding="{Binding Duration, Mode=TwoWay}"/>
-                <DataGridTextColumn Header="Delay" Width="*" Binding="{Binding Delay, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Every (min.)" Width="*" Binding="{Binding Duration, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Delay (sec.)" Width="*" Binding="{Binding Delay, Mode=TwoWay}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Grid Grid.Row="1" Grid.ColumnSpan="3">

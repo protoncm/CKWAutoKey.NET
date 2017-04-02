@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
         xmlns:helper="clr-namespace:CoinAutoKeyweight.NET.Helpers"
         mc:Ignorable="d"
-        Title="Action Keys" Height="350" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Action Keys" Height="350" Width="300" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="funshine_bear.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -21,8 +21,8 @@
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn  Binding="{Binding IsChecked, Mode=TwoWay}" />
                 <DataGridTextColumn Header="Key" Width="50" Binding="{Binding Key, Mode=TwoWay}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Duration" Width="*" Binding="{Binding Duration, Mode=TwoWay}"/>
-                <DataGridTextColumn Header="Delay" Width="*" Binding="{Binding Delay, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Duration (sec.)" Width="*" Binding="{Binding Duration, Mode=TwoWay}"/>
+                <DataGridTextColumn Header="Delay (sec.)" Width="*" Binding="{Binding Delay, Mode=TwoWay}"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="btnAddKey" Grid.Row="1" Margin="5" Click="btnAddKey_Click">Add</Button>
