@@ -100,7 +100,16 @@ namespace CoinAutoKeyweight.NET.Services
                     }
 
                     document.Element("Config").Add(profileElements);
-                    document.Element("Config").Add(new XElement("CurrentProfile", configs["CurrentProfileName"]));
+                    XElement currentProfile = document.Element("Config").Element("CurrentProfile");
+                    if(currentProfile != null)
+                    {
+                        currentProfile.SetValue(configs["CurrentProfileName"]);
+                    }
+                    else
+                    {
+                        document.Element("Config").Add(new XElement("CurrentProfile", configs["CurrentProfileName"]));
+                    }
+                    
                 }
                 else if(sourceChanged == SourceChanged.Settings)
                 {

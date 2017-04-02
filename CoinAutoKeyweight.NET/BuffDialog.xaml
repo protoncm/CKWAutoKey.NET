@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinAutoKeyweight.NET"
+        xmlns:helper="clr-namespace:CoinAutoKeyweight.NET.Helpers"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Buff Key and config" Height="350" Width="300" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
@@ -18,7 +19,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="dgKeys" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding Config.AssignedBuffKeys}" AutoGenerateColumns="False" MouseDoubleClick="dgKeys_MouseDoubleClick" CanUserAddRows="False">
+        <DataGrid x:Name="dgKeys" Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding Config.AssignedBuffKeys}" AutoGenerateColumns="False" MouseDoubleClick="dgKeys_MouseDoubleClick" CanUserAddRows="False" helper:VisualHelper.EnableRowsMove="True" SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn  Binding="{Binding IsChecked, Mode=TwoWay}" />
                 <DataGridTextColumn Header="Key" Width="50" Binding="{Binding Key, Mode=TwoWay}" IsReadOnly="True" />

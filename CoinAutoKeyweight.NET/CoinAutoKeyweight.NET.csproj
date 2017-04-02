@@ -119,6 +119,7 @@
     <Compile Include="Converters\SettingButtonStageConverter.cs" />
     <Compile Include="Converters\ButtonStageConverter.cs" />
     <Compile Include="FormDataSource.cs" />
+    <Compile Include="Helpers\VisualHelper.cs" />
     <Compile Include="KeysDialog.xaml.cs">
       <DependentUpon>KeysDialog.xaml</DependentUpon>
     </Compile>
