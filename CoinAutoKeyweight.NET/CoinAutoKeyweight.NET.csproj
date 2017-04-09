@@ -115,6 +115,7 @@
     </Compile>
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="ConfigurationData.cs" />
+    <Compile Include="Converters\PausedButtonStageConverter.cs" />
     <Compile Include="Converters\MenuItemEnableConverter.cs" />
     <Compile Include="Converters\SettingButtonStageConverter.cs" />
     <Compile Include="Converters\ButtonStageConverter.cs" />

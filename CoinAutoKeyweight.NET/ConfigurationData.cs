@@ -30,6 +30,7 @@ namespace CoinAutoKeyweight.NET
             {
                 _needInitialConfig = value;
                 OnPropertyChanged("NeedInitialConfig");
+                OnPropertyChanged("EnablePauseButton");
             }
         }
         public AssignedKey DisplayAssignedKey

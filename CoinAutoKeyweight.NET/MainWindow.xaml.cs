@@ -22,11 +22,13 @@ namespace CoinAutoKeyweight.NET
         private Thread thread;
         private Stopwatch runningTime;
         private System.Timers.Timer timer;
+        private ManualResetEvent manualResetEvent;
         public MainWindow()
         {
             InitializeComponent();
             _formDataSource = (FormDataSource)FindResource("formDataSource");
             _inputService = new InputServices();
+            manualResetEvent = new ManualResetEvent(true);
         }
 
         private void btnAssignKey_Click(object sender, RoutedEventArgs e)
@@ -123,6 +125,8 @@ namespace CoinAutoKeyweight.NET
                             _formDataSource.SetStatusText($"> Press Key {_formDataSource.Config.DisplayAssignedKey.Key}. (Holding {_formDataSource.Config.DisplayAssignedKey.Duration} sec)");
                             // do action
                             DoAction(activeKeyStroke);
+                            // capture event for pause and resume
+                            manualResetEvent.WaitOne();
                         }
                     }
                     while (_formDataSource.IsRunning);
@@ -160,6 +164,8 @@ namespace CoinAutoKeyweight.NET
                 // do action
                 DoAction(buffKey, true);
                 buffKey.Timestamp = runningStopwatch.Elapsed.TotalMinutes;
+                // capture event for pause and resume
+                manualResetEvent.WaitOne();
             }
         }
 
@@ -171,6 +177,8 @@ namespace CoinAutoKeyweight.NET
             double duration = isBuff ? 0.5 : ak.Duration;
             while (timer.Elapsed < TimeSpan.FromSeconds(duration))
             {
+                // capture event for pause and resume
+                manualResetEvent.WaitOne();
                 InputServices.PressKey(ak.Key, true);
                 Thread.Sleep(timeOffset); // waiting time
             }
@@ -181,11 +189,11 @@ namespace CoinAutoKeyweight.NET
             if (ak.Delay != 0)
             {
                 int delay = Convert.ToInt32(ak.Delay * 1000);
-                Thread.Sleep(delay);
                 if (delay >= 1000)
                 {
                     _formDataSource.SetStatusText($"! Waiting in {ak.Delay} sec");
                 }
+                Thread.Sleep(delay);
             }
         }
 
@@ -311,6 +319,31 @@ namespace CoinAutoKeyweight.NET
         {
             tbLogMessage.SelectionStart = tbLogMessage.Text.Length;
             tbLogMessage.ScrollToLine(tbLogMessage.GetLineIndexFromCharacterIndex(tbLogMessage.SelectionStart));
+        }
+
+        private void btnPaused_Click(object sender, RoutedEventArgs e)
+        {
+            DoPauseOrResume();
+        }
+
+        private void DoPauseOrResume()
+        {
+            if (_formDataSource.IsRunning)
+            {
+                if (!_formDataSource.IsPaused)
+                {
+                    manualResetEvent.Reset();
+                    _formDataSource.IsPaused = true;
+                    _formDataSource.SetStatusText("> Pausing.");
+                }
+                else
+                {
+                    manualResetEvent.Set();
+                    _formDataSource.IsPaused = false;
+                    _formDataSource.SetStatusText("> Resumed.");
+                    WindowsAPI.SwitchWindow(WindowHandle);
+                }
+            }
         }
     }
 }

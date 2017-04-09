@@ -10,6 +10,7 @@ namespace CoinAutoKeyweight.NET
     {
         private string _messageText = "Ready.";
         private bool _isRunning = false;
+        private bool _isPaused = false;
         private const string STATUS = "Status";
         private const string  APPLICATION_TITLE = "Bear Macro";
         private string _formTitle = string.Empty;
@@ -17,6 +18,7 @@ namespace CoinAutoKeyweight.NET
         private string _logMessage = string.Empty;
         private const int MAX_MESSAGE_LOG = 100;
         private Queue<string> messageStore = new Queue<string>(MAX_MESSAGE_LOG);
+        private bool _enablePauseButton = false;
         public ConfigurationData Config
         {
             get;
@@ -37,6 +39,14 @@ namespace CoinAutoKeyweight.NET
                 _formTitle = Config.CurrentProfile.Name;
             }
         }
+
+        public bool EnablePauseButton
+        {
+            get
+            {
+                return IsRunning && Config.NeedInitialConfig;
+            }
+        }
         public string FormTitle
         {
             get
@@ -49,6 +59,15 @@ namespace CoinAutoKeyweight.NET
                 OnPropertyChanged("FormTitle");
             }
         }
+        public bool IsPaused
+        {
+            get { return _isPaused; }
+            set
+            {
+                _isPaused = value;
+                OnPropertyChanged("IsPaused");
+            }
+        }
         public bool IsRunning
         {
             get { return _isRunning; }
@@ -56,6 +75,7 @@ namespace CoinAutoKeyweight.NET
             {
                 _isRunning = value;
                 OnPropertyChanged("IsRunning");
+                OnPropertyChanged("EnablePauseButton");
             }
         }
 
