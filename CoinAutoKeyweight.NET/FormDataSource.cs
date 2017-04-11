@@ -18,7 +18,6 @@ namespace CoinAutoKeyweight.NET
         private string _logMessage = string.Empty;
         private const int MAX_MESSAGE_LOG = 100;
         private Queue<string> messageStore = new Queue<string>(MAX_MESSAGE_LOG);
-        private bool _enablePauseButton = false;
         public ConfigurationData Config
         {
             get;

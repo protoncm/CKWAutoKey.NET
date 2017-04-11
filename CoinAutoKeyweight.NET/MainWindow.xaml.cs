@@ -29,6 +29,15 @@ namespace CoinAutoKeyweight.NET
             _formDataSource = (FormDataSource)FindResource("formDataSource");
             _inputService = new InputServices();
             manualResetEvent = new ManualResetEvent(true);
+            WindowsAPI.ActiveWindowChanged += (wt, wp) => {
+                if (_formDataSource.Config.Settings.IsSnapping && _formDataSource.IsRunning)
+                {
+                    if (wp != WindowHandle)
+                        DoPauseOrResume(true);
+                    else
+                        DoPauseOrResume(false);
+                }
+            };
         }
 
         private void btnAssignKey_Click(object sender, RoutedEventArgs e)
@@ -323,14 +332,14 @@ namespace CoinAutoKeyweight.NET
 
         private void btnPaused_Click(object sender, RoutedEventArgs e)
         {
-            DoPauseOrResume();
+            DoPauseOrResume(!_formDataSource.IsPaused);
         }
 
-        private void DoPauseOrResume()
+        private void DoPauseOrResume(bool pause)
         {
             if (_formDataSource.IsRunning)
             {
-                if (!_formDataSource.IsPaused)
+                if (pause)
                 {
                     manualResetEvent.Reset();
                     _formDataSource.IsPaused = true;

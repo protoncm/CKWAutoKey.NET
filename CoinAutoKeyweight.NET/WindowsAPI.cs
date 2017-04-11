@@ -8,6 +8,7 @@ using System.Text;
 /// </summary>
 public class WindowsAPI
 {
+    #region Events & Key Constants
     /// <summary>
     /// 
     /// </summary>
@@ -81,22 +82,38 @@ public class WindowsAPI
     /// 
     /// </summary>
     public const int VK_F7 = 0x76;
+    public const uint WINEVENT_OUTOFCONTEXT = 0;
+    public const uint EVENT_SYSTEM_FOREGROUND = 3;
+    public const uint EVENT_SYSTEM_MIN = 0x00000001;
+    public const uint EVENT_SYSTEM_MAX = 0x7FFFFFFF;
+    #endregion
 
+    #region User32
     /// <summary>
     /// The GetForegroundWindow function returns a handle to the foreground window.
     /// </summary>
     [DllImport("user32.dll")]
     public static extern IntPtr GetForegroundWindow();
-
-    [DllImport("kernel32.dll")]
-    public static extern uint GetCurrentThreadId();
-
     [DllImport("user32.dll", SetLastError = true)]
     public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
+    [DllImport("user32.dll")]
+    public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
     [DllImport("user32.dll")]
     public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+    [DllImport("user32.dll")]
+    public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+    [DllImport("user32.dll")]
+    public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax,
+        IntPtr hmodWinEventProc, WinEventDelegate lpfnWinEventProc,
+        uint idProcess, uint idThread, uint dwFlags);
+    public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType,
+    IntPtr hwnd, int idObject, int idChild, uint dwEventThread,
+    uint dwmsEventTime);
+    #endregion
 
+    #region Kernel32
+    [DllImport("kernel32.dll")]
+    public static extern uint GetCurrentThreadId();
     [DllImport("kernel32.dll", SetLastError = true)]
     public static extern bool ReadProcessMemory(
       IntPtr hProcess,
@@ -105,6 +122,36 @@ public class WindowsAPI
       int dwSize,
       out int lpNumberOfBytesRead
      );
+    #endregion
+
+    private static IntPtr m_hhook;
+    private static WinEventDelegate _winEventProc;
+    public delegate void ActiveWindowChangedHandler(string windowHeader, IntPtr hwnd);
+    public static event ActiveWindowChangedHandler ActiveWindowChanged;
+
+    static WindowsAPI()
+    {
+        _winEventProc = new WinEventDelegate(WinEventProc);
+        m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND,
+            EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, _winEventProc,
+            0, 0, WINEVENT_OUTOFCONTEXT);
+    }
+
+    public static void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd,
+    int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+    {
+        if (eventType == EVENT_SYSTEM_FOREGROUND)
+        {
+            ActiveWindowChanged?.Invoke(GetActiveWindowTitle(hwnd), hwnd);
+        }
+    }
+
+    private static string GetActiveWindowTitle(IntPtr hwnd)
+    {
+        StringBuilder Buff = new StringBuilder(500);
+        GetWindowText(hwnd, Buff, Buff.Capacity);
+        return Buff.ToString();
+    }
 
     public static void SwitchWindow(IntPtr windowHandle)
     {
